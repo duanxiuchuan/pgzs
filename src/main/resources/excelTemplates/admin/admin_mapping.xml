@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<workbook>
+	<worksheet name="Template">
+		<section startRow="0" endRow="2">
+		</section>
+		<loop startRow="3" endRow="3" items="list" var="admin"
+			varType="cn.ctbu.practice.entity.vo.AdminExcelImportData">
+			<section startRow="3" endRow="3">
+				<mapping row="3" col="0">admin.userName</mapping>
+				<mapping row="3" col="1">admin.realName</mapping>
+				<mapping row="3" col="2">admin.phone</mapping>
+				<mapping row="3" col="3">admin.genderType</mapping>
+				<mapping row="3" col="4">admin.deptName</mapping>
+			</section>
+			<loopbreakcondition>
+				<rowcheck offset="0">
+					<cellcheck offset="1"></cellcheck>
+				</rowcheck>
+			</loopbreakcondition>
+		</loop>
+	</worksheet>
+</workbook>

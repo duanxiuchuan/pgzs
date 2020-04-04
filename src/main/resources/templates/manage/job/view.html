@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="manage/common/header :: header"></div>
+
+<body>
+<div class="x-body">
+    <form class="layui-form layui-form-pane">
+		<div class="layui-form-item">
+            <label for="userName" class="layui-form-label">
+                遗传病历名
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" disabled th:value="${medicalHistory.name}" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+            </div>
+        </div>
+		<div class="layui-form-item">
+            <label for="userName" class="layui-form-label">
+                创建时间
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" disabled th:value="${#dates.format(medicalHistory.createDate,'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+            </div>
+        </div>
+		<div class="layui-form-item">
+            <label for="userName" class="layui-form-label">
+                创建人
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" disabled th:value="${medicalHistory.createName}" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+            </div>
+        </div>
+		<div class="layui-form-item">
+            <label for="userName" class="layui-form-label">
+                修改时间
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" disabled th:value="${#dates.format(medicalHistory.modifyDate,'yyyy-MM-dd HH:mm:ss')}" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+            </div>
+        </div>
+		<div class="layui-form-item">
+            <label for="userName" class="layui-form-label">
+                修改人
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" disabled th:value="${medicalHistory.modifyName}" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+            </div>
+        </div>
+        
+    </form>
+</div>
+<script>
+</script>
+</body>
+</html>

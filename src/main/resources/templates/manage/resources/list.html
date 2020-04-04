@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<div th:replace="manage/common/header :: header"></div>
+<link rel="stylesheet" th:href="@{/css/role.css}" />
+
+<body>
+<div class="page-main">
+     <div class="page-title" style="font-size: 14px">
+        <label>权限管理</label>
+        <span class="fr">
+            <button id="refresh" onclick="javascript:location.replace(location.href);" class="layui-btn" style="margin: 5px">
+                <i class="layui-icon layui-icon-refresh"></i>
+                <th:block th:text="#{admin.common.refresh}"></th:block>
+            </button>
+        </span>
+        <span class="fr" shiro:hasPermission="/manage/res/addcategory">
+            <button onclick="add0()" class="layui-btn layui-btn-normal" style="margin: 5px">
+                <i class="layui-icon layui-icon-add-1"></i>新建
+            </button>
+        </span>
+    </div>
+</div>
+<div class="x-body">
+    <table class="layui-table layui-form">
+        <thead>
+        <tr>
+            <th width="20">
+                <div class="layui-unselect header layui-form-checkbox" lay-skin="primary">
+                	<i class="layui-icon">&#xe605;</i>
+                </div>
+            </th>
+            <th>栏目名</th>
+            <th width="200">链接</th>
+            <th width="50">排序</th>
+            <th width="80">状态</th>
+            <th width="230">操作</th>
+        </thead>
+        <tbody class="x-cate">
+        <th:block th:each="topRes : ${topResources}">
+            <tr th:cate-id='${topRes.id}' th:fid='${topRes.parentId}'>
+                <td>
+                    <div class="layui-unselect layui-form-checkbox" lay-skin="primary" th:id="${topRes.id}">
+                    	<i class="layui-icon">&#xe605;</i>
+                    </div>
+                </td>
+                <td>
+                    <th:block><i class="layui-icon x-show" status='true'>&#xe623;</i></th:block>
+                    <th:block th:text="${topRes.name}"></th:block>
+                </td>
+                <td>
+                    <th:block th:text="${topRes.url}"></th:block>
+                </td>
+                <td><input type="text" class="layui-input x-sort" name="order" th:value="${topRes.sort}"></td>
+                <td>
+                    <input type="checkbox" name="switch" disabled="disabled" lay-text="开启|停用" th:checked="${topRes.isEnable == 1}" lay-skin="switch">
+                </td>
+
+                <td class="td-manage">
+                    <button shiro:hasPermission="/manage/res/editPage" class="layui-btn layui-btn layui-btn-xs" th:onclick="'edit(' + ${topRes.id} + ')'">
+                    	<i class="layui-icon">&#xe642;</i>编辑
+                    </button>
+                    <button shiro:hasPermission="/manage/res/delete" class="layui-btn-danger layui-btn layui-btn-xs" th:onclick="'res_del(this,' + ${topRes.id} + ')'" href="javascript:;">
+                    	<i class="layui-icon">&#xe640;</i>删除
+                    </button>
+                    <button shiro:hasPermission="/manage/res/addsubord" class="layui-btn layui-btn-warm layui-btn-xs" th:onclick="'add(' + ${topRes.id} + ')'">
+                    	<i class="layui-icon">&#xe642;</i>添加下级权限
+                    </button>
+                </td>
+            </tr>
+            <th:block th:each="secordRes : ${secordResources}">
+                <th:block th:if="${secordRes.parentId} eq ${topRes.id}">
+                    <tr th:cate-id='${secordRes.id}' th:fid='${secordRes.parentId}'>
+                        <td>
+                            <div class="layui-unselect layui-form-checkbox" lay-skin="primary" th:id="${secordRes.id}">
+                                <i class="layui-icon">&#xe605;</i>
+                            </div>
+                        </td>
+                        <td>
+                            <th:block>
+                            	&nbsp;&nbsp;&nbsp;&nbsp;<i class="layui-icon x-show" status='true'>&#xe623;</i>
+                            </th:block>
+                            <th:block th:text="${secordRes.name}"></th:block>
+                        </td>
+                        <td>
+                            <th:block th:text="${secordRes.url}"></th:block>
+                        </td>
+                        <td>
+                        	<input type="text" class="layui-input x-sort" name="order" th:value="${secordRes.sort}">
+                        </td>
+                        <td>
+                            <input type="checkbox" name="switch" disabled="disabled" lay-text="开启|停用" th:checked="${secordRes.isEnable == 1}" lay-skin="switch">
+                        </td>
+
+                        <td class="td-manage">
+                            <button shiro:hasPermission="/manage/res/editPage" class="layui-btn layui-btn layui-btn-xs" th:onclick="'edit(' + ${secordRes.id} + ')'">
+                            	<i class="layui-icon">&#xe642;</i>编辑
+                            </button>
+                            <button shiro:hasPermission="/manage/res/delete" class="layui-btn-danger layui-btn layui-btn-xs" th:onclick="'res_del(this,' + ${secordRes.id} + ')'" href="javascript:;">
+                            	<i class="layui-icon">&#xe640;</i>删除
+                            </button>
+                            <th:block th:if="${secordRes.type != 2}">
+                                <button shiro:hasPermission="/manage/res/addsubord" class="layui-btn layui-btn-warm layui-btn-xs" th:onclick="'add(' + ${secordRes.id} + ')'">
+                                	<i class="layui-icon">&#xe642;</i>添加下级权限
+                                </button>
+                            </th:block>
+                        </td>
+                    </tr>
+                    <th:block th:each="lastRes : ${lastResources}">
+                        <th:block th:if="${lastRes.parentId} eq ${secordRes.id}">
+                            <tr th:cate-id='${lastRes.id}' th:fid='${lastRes.parentId}'>
+                                <td>
+                                    <div class="layui-unselect layui-form-checkbox" lay-skin="primary" th:id="${lastRes.id}">
+                                    	<i class="layui-icon">&#xe605;</i>
+                                    </div>
+                                </td>
+                                <td>
+                                    <th:block>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├</th:block>
+                                    <th:block th:text="${lastRes.name}"></th:block>
+                                </td>
+                                <td>
+                                    <th:block th:text="${lastRes.url}"></th:block>
+                                </td>
+                                <td>
+                                	<input type="text" class="layui-input x-sort" name="order" th:value="${lastRes.sort}">
+                                </td>
+                                <td>
+                                    <input type="checkbox" name="switch" disabled="disabled" lay-text="开启|停用" th:checked="${lastRes.isEnable == 1}" lay-skin="switch">
+                                </td>
+                                <td class="td-manage">
+                                    <button shiro:hasPermission="/manage/res/editPage" class="layui-btn layui-btn layui-btn-xs" th:onclick="'edit(' + ${lastRes.id} + ')'">
+                                    	<i class="layui-icon">&#xe642;</i>编辑
+                                    </button>
+                                    <th:block th:if="${lastRes.type != 2}">
+                                        <button shiro:hasPermission="/manage/res/addsubord" class="layui-btn layui-btn-warm layui-btn-xs" th:onclick="'add(' + ${lastRes.id} + ')'">
+                                        	<i class="layui-icon">&#xe642;</i>添加下级权限
+                                        </button>
+                                    </th:block>
+                                    <button shiro:hasPermission="/manage/res/delete" class="layui-btn-danger layui-btn layui-btn-xs" th:onclick="'res_del(this,' + ${lastRes.id} + ')'" href="javascript:;">
+                                    	<i class="layui-icon">&#xe640;</i>删除
+                                    </button>
+                                </td>
+                            </tr>
+                        </th:block>
+                    </th:block>
+                </th:block>
+            </th:block>
+        </th:block>
+        </tbody>
+    </table>
+</div>
+<script>
+
+    function timeOut() {
+        setTimeout("reload()", 200);
+    }
+
+    function reload() {
+        location.reload();
+    }
+
+    function add0(id) {
+        x_admin_show('添加', "open", "750", "");
+    }
+
+    function add(id) {
+        x_admin_edit('添加', "show", "750", "", id);
+    }
+
+    function edit(id) {
+        x_admin_edit('修改', "show", "750", "", id + "e");
+    }
+
+    layui.use(['form'], function () {
+        form = layui.form;
+
+    });
+
+
+    /*删除*/
+    function res_del(obj, id) {      
+      layer.confirm('确定要删除权限?', {
+            btn: ['确定', '取消'] //按钮
+        }, function () {
+        	console.log("qudha")
+        	$.ajax({
+                url: "/manage/res/delete",
+                type: "POST",
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                	 if (data.status == 200) {
+                         layer.msg(data.result, {time: 2000, icon: 1});
+                         location.reload(true);
+                     } else {
+                         layer.msg(data.result, {time: 2000, icon: 5});
+                     }
+                }
+            });
+        }, function () {
+          
+        });
+    }
+
+
+    function delAll(argument) {
+
+        var data = tableCheck.getData();
+
+        layer.confirm('确认要删除吗？' + data, function (index) {
+            //捉到所有被选中的，发异步进行删除
+            layer.msg('删除成功', {icon: 1});
+            $(".layui-form-checked").not('.header').parents('tr').remove();
+        });
+    }
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<div th:replace="manage/common/header :: header"></div>
+<link rel="stylesheet" th:href="@{/css/role.css}" />
+
+<body>
+<div class="x-body">
+    <div class="layui-row">
+        <div class="layui-form layui-col-md12 x-so">
+            <input type="text" id="name" name="name" placeholder="小区名称" autocomplete="off"
+                   class="layui-input">
+            <input type="text" id="phone" name="style" placeholder="装修风格" autocomplete="off" class="layui-input">
+            <button class="layui-btn" data-type="reload"><i class="layui-icon">&#xe615;</i></button>
+        </div>
+    </div>
+    <div class="layui-row">
+        <table class="layui-hide" id="tableData" lay-filter="tableData"></table>
+    </div>
+</div>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+
+        <button shiro:hasPermission="/manage/case/deleteAll" class="layui-btn layui-btn-sm layui-btn-danger" onclick="delAll()">
+            <i class="layui-icon"></i>
+            <th:block th:text="#{admin.common.batchDelete}"></th:block>
+        </button>
+        <button class="layui-btn layui-btn-sm" onclick="add()">
+            <i class="layui-icon"></i>
+            <label th:text="#{admin.common.addCase}"></label>
+        </button>
+        <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);">
+            <i class="layui-icon">&#xe666;</th:block></i></a>
+    </div>
+</script>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-xs" lay-event="view">查看</a>
+</script>
+
+
+<script>
+
+    function add() {
+        x_admin_show('添加案例', 'addPage');
+    }
+
+    layui.use('table', function () {
+        var table = layui.table;
+        table.render({
+            elem: '#tableData'
+            , url: 'listData'
+            , toolbar: '#toolbarDemo'
+            , title: '用户数据表'
+            , defaultToolbar:['exports']
+            , cols: [
+                [
+
+                    {type: 'checkbox', fixed: 'left'}
+                    , {field: 'id', title: 'ID', width:80,  fixed: 'left',type:"numbers"}
+                    , {field: 'title', title: "标题",  fixed: 'left'}
+                    , {field: 'areasName', title: "小区名称"}
+                    , {field: 'area', title: "面积"}
+                    , {field: 'layout', title: "户型"}
+                    , {field: 'style', title: "装修风格"}
+                    , {field: 'designer', title: "设计师"}
+                    , {field: 'address', title: "地区"}
+                    , {fixed: 'right', title: "[[#{admin.common.action}]]", toolbar: '#barDemo', width: 200}
+
+                ]
+    ]
+            , page: true
+
+        });
+        var $ = layui.$, active = {
+            reload: function () {
+                var name = $("#name").val();
+                console.log(name)
+                table.reload('tableData', {
+                    where: {
+                        name: $("#name").val(),
+                        phone: $("#phone").val()
+                    }
+                });
+            }
+        }
+
+        $('.layui-form .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        //头工具栏事件
+        table.on('toolbar(tableData)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                    break;
+                case 'getCheckLength':
+                    var data = checkStatus.data;
+                    layer.msg('选中了：' + data.length + ' 个');
+                    break;
+                case 'isAll':
+                    layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                    break;
+            }
+            ;
+        });
+
+        //监听行工具事件
+        table.on('tool(tableData)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                layer.confirm('确定删除吗', function (index) {
+                    $.ajax({
+                        url: 'delete',
+                        type: 'POST',
+                        data: {phone: data.phone},
+                        success: function (data) {
+                            if (data.status == 0) {
+                                layer.msg(data.result, {icon: 2, time: 1000});
+                            } else {
+                                obj.del();
+                                layer.close(layer.msg(data.result, {icon: 1, time: 1000}));
+                            }
+                        }
+                    });
+
+                });
+            } else if (obj.event === 'edit') {
+                x_admin_edit('编辑', 'editPage', '', '', data.phone);
+            } else if (obj.event === 'view') {
+                x_admin_edit('详情', 'view', '', '', data.phone);
+            }
+        });
+    });
+</script>
+</body>
+</html>

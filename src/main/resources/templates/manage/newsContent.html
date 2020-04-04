@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<div th:replace="manage/common/header :: header"></div>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <!--<div class="layui-card-header">新闻详情</div>-->
+                    <div class="layui-card-body" style="min-height: 320px;">
+                       <div class="news-content">
+                           <h2 th:text="${model.get('title')?:''}"></h2>
+                           <p class="news-au">
+                                 <span>时间：[[${#dates.format(model.get('createDate')?:'', 'yyyy年-MM月-dd日')}]]</span>
+                               <span>类型：[[${model.get('typeName')?:''}]]</span><span>作者：[[${model.get('autho')?:''}]]</span>
+                           </p>
+                           <div class="news-word" th:utext="${model.get('content')?:''}">
+
+                           </div>
+                       </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <script>
+        layui.use(['laypage', 'layer','carousel'], function(){
+            var laypage = layui.laypage,carousel = layui.carousel
+                ,layer = layui.layer;
+
+
+
+        });
+   </script>
+
+</body>
+</html>

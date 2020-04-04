@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="manage/common/header :: header"></div>
+<link rel="stylesheet" th:href="@{/css/role.css}"/>
+<body>
+<div class="page-main">
+    <h2>角色和权限设置</h2>
+    <div class="page-title" style="font-size: 14px">公司角色 <span class="fr"><button id="add"
+                                                                                  class="layui-btn layui-btn-normal"><i
+            class="layui-icon layui-icon-add-1"></i>新增角色</button></span></div>
+    <div class="layui-row page-all layui-clear">
+        <div class="layui-col-md2">
+            <ul class="page-left-nav">
+                <th:block th:each="role, roleStat : ${roles}">
+                    <li th:class="${roleStat.index == 0} ? 'right01 active' : 'right01'">
+                        <label th:text="${role.name}"></label><span class="fr"><label
+                            th:text="${role.isBuiltIn == 0} ? '系统默认'"></label></span>
+                    </li>
+                </th:block>
+            </ul>
+        </div>
+        <div class="layui-col-md10">
+            <div class="page-right-content layui-show" id="right01">
+                <h2>超级管理员设置</h2>
+                <div class="layui-tab">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this" lay-id="11">操作权限</li>
+                        <li lay-id="22">数据权限</li>
+                        <li lay-id="33">字段权限</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <div class="layui-collapse" lay-accordion="">
+                                <th:block th:each="res : ${resources}">
+                                    <div class="layui-colla-item">
+                                        <h2 class="layui-colla-title"><label th:text="${res.name}"></label></h2>
+                                        <div class="layui-colla-content layui-form">
+                                            <th:block th:each="res2 : ${resourcesSecond}">
+                                                <input th:if="${res.id} == ${res2.parentId}" name="like1[ckxs]"
+                                                       lay-skin="primary" th:title="${res2.name}" type="checkbox">
+                                            </th:block>
+                                        </div>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
+                        <div class="layui-tab-item">
+                            内容2
+                        </div>
+                        <div class="layui-tab-item">
+                            内容3
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-right-content" id="right02">
+                <h2>普通管理员设置</h2>
+                <div class="layui-tab">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this" lay-id="11">操作权限</li>
+                        <li lay-id="22">数据权限</li>
+                        <li lay-id="33">字段权限</li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <div class="layui-collapse" lay-accordion="">
+                                <div class="layui-colla-item">
+                                    <h2 class="layui-colla-title">线索-权限</h2>
+                                    <div class="layui-colla-content layui-form layui-show">
+                                        <input name="like1[ckxs]" lay-skin="primary" title="查看线索" type="checkbox">
+                                        <input name="like1[xzxs]" lay-skin="primary" title="新增线索" type="checkbox">
+                                        <input name="like1[bjxs]" lay-skin="primary" title="编辑线索" type="checkbox">
+                                        <input name="like1[scxs]" lay-skin="primary" title="删除线索" type="checkbox">
+                                        <input name="like1[drxs]" lay-skin="primary" title="导入线索" type="checkbox">
+                                        <input name="like1[dcxs]" lay-skin="primary" title="导出线索" type="checkbox">
+                                        <input name="like1[zckh]" lay-skin="primary" title="转成客户" type="checkbox">
+                                        <input name="like1[zyxsgtr]" lay-skin="primary" title="转移线索给他人" type="checkbox">
+                                    </div>
+                                </div>
+                                <div class="layui-colla-item">
+                                    <h2 class="layui-colla-title">客户-权限</h2>
+                                    <div class="layui-colla-content layui-form">
+                                        <input name="like1[ckxs]" lay-skin="primary" title="查看线索" type="checkbox">
+                                        <input name="like1[xzxs]" lay-skin="primary" title="新增线索" type="checkbox">
+                                        <input name="like1[bjxs]" lay-skin="primary" title="编辑线索" type="checkbox">
+                                        <input name="like1[scxs]" lay-skin="primary" title="删除线索" type="checkbox">
+                                        <input name="like1[drxs]" lay-skin="primary" title="导入线索" type="checkbox">
+                                        <input name="like1[dcxs]" lay-skin="primary" title="导出线索" type="checkbox">
+                                        <input name="like1[zckh]" lay-skin="primary" title="转成客户" type="checkbox">
+                                        <input name="like1[zyxsgtr]" lay-skin="primary" title="转移线索给他人" type="checkbox">
+                                    </div>
+                                </div>
+                                <div class="layui-colla-item">
+                                    <h2 class="layui-colla-title">联系人-权限</h2>
+                                    <div class="layui-colla-content layui-form">
+                                        <input name="like1[ckxs]" lay-skin="primary" title="查看线索" type="checkbox">
+                                        <input name="like1[xzxs]" lay-skin="primary" title="新增线索" type="checkbox">
+                                        <input name="like1[bjxs]" lay-skin="primary" title="编辑线索" type="checkbox">
+                                        <input name="like1[scxs]" lay-skin="primary" title="删除线索" type="checkbox">
+                                        <input name="like1[drxs]" lay-skin="primary" title="导入线索" type="checkbox">
+                                        <input name="like1[dcxs]" lay-skin="primary" title="导出线索" type="checkbox">
+                                        <input name="like1[zckh]" lay-skin="primary" title="转成客户" type="checkbox">
+                                        <input name="like1[zyxsgtr]" lay-skin="primary" title="转移线索给他人" type="checkbox">
+                                    </div>
+                                </div>
+                                <div class="layui-colla-item">
+                                    <h2 class="layui-colla-title">商机-权限</h2>
+                                    <div class="layui-colla-content layui-form">
+                                        <input name="like1[ckxs]" lay-skin="primary" title="查看线索" type="checkbox">
+                                        <input name="like1[xzxs]" lay-skin="primary" title="新增线索" type="checkbox">
+                                        <input name="like1[bjxs]" lay-skin="primary" title="编辑线索" type="checkbox">
+                                        <input name="like1[scxs]" lay-skin="primary" title="删除线索" type="checkbox">
+                                        <input name="like1[drxs]" lay-skin="primary" title="导入线索" type="checkbox">
+                                        <input name="like1[dcxs]" lay-skin="primary" title="导出线索" type="checkbox">
+                                        <input name="like1[zckh]" lay-skin="primary" title="转成客户" type="checkbox">
+                                        <input name="like1[zyxsgtr]" lay-skin="primary" title="转移线索给他人" type="checkbox">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-tab-item">
+                            内容2
+                        </div>
+                        <div class="layui-tab-item">
+                            内容3
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['element', 'form'], function () {
+        var $ = layui.jquery
+            , element = layui.element, form = layui.form; //Tab的切换功能，切换事件监听等，需要依赖element模块
+
+        //左边点击事情
+        $('body').on('click', '.page-left-nav li', function (othis) {
+            $(".page-left-nav li").removeClass('active');
+            othis.currentTarget.className = 'active';
+            var index = $(".page-left-nav li").index(this) + 1;
+            $(".page-right-content").removeClass("layui-show");
+            // $(".page-right-content").index(this).addClass("layui-show");
+            $("#right0" + index).addClass('layui-show');
+        });
+
+        //添加角色
+        $("#add").click(function () {
+            layer.open({
+                type: 1,
+                title: '添加角色',
+                skin: 'layui-layer-rim', //加上边框
+                area: ['420px', '190px'], //宽高
+                btn: ['保存', '取消'],
+                content: '<div style="padding: 5%"><input id="roleName" class="layui-input" placeholder="请输入角色名称"></div>',
+                yes: function (index) {
+                    var role = $("#roleName").val();
+                    var n = $(".page-left-nav li").length + 1;
+                    var html = "<li class='right0" + n + "'>" + role + "</li>";
+                    $(".page-left-nav").append(html);
+                    layer.close(index)
+                }
+            });
+        })
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<div th:replace="manage/common/header :: header"></div>
+<style>
+	img{height:100%;}
+</style>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md6">
+                <div class="layui-card">
+                    <div class="layui-card-header">新闻列表</div>
+                    <div class="layui-card-body" style="min-height: 320px;">
+                       <ul class="news-list" id="newContent">
+
+                       </ul>
+                        <div id="page" class="layui-text-center"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-card">
+                    <div class="layui-card-header">广告轮播</div>
+                    <div class="layui-card-body" style="min-height: 320px;">
+                        <div class="layui-carousel" id="test1" lay-filter="test1">
+                            <div carousel-item="" id="imgContent" height="100%">
+                                <div><img width="100%"  th:src="@{/images/shop/hot.jpg}"></div>
+                                <div><img  width="100%" th:src="@{/images/shop/hot.jpg}"></div>
+                                <div><img  width="100%" th:src="@{/images/shop/hot.jpg}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" th:src="@{/js/echarts.min.js}"></script>
+    <script>
+        layui.use(['laypage', 'layer','carousel'], function(){
+            var laypage = layui.laypage,carousel = layui.carousel
+                ,layer = layui.layer;
+
+            //常规轮播
+            var ins = carousel.render({
+                elem: '#test1'
+                ,height:"320px"
+                ,width:"100%"
+                ,arrow: 'hover'
+            });
+            function getHtml(data,html){
+                $.each(data,function (i, o) {
+                    html += '<div><a href="'+o.url+'" target="_blank"><img width="100%"  src="'+o.imgPath+'" title="'+o.title+'"></a></div>';
+                })
+                return html;
+            }
+            $.post("/hospital/carouselMap/listData",{"ifEnable":true},function (res) {
+                var data = res.data;
+                var html = '';
+                if (data.length == 1){
+                    html += getHtml(data,html);
+                    html += '<div><img width="100%"  src="/images/shop/hot.jpg"></div>' +
+                        '<div><img width="100%"  src="/images/shop/hot.jpg"></div>';
+
+                }else if (data.length == 2){
+                    html += getHtml(data,html);
+                    html += '<div><img width="100%"  src="/images/shop/hot.jpg"></div>';
+                }else {
+                    html += getHtml(data,html);
+                }
+                if (html != ""){
+                    $("#imgContent").html(html);
+                    //重置轮播
+                    ins.reload({
+                        elem: '#test1'
+                        ,height:"320px"
+                        ,width:"100%"
+                        ,arrow: 'hover'
+                    });
+                }
+
+            })
+        });
+   </script>
+
+<!--新闻列表分页-->
+    <script>
+        var page_flag = false;
+        var list = new Array();
+
+        layui.use(['laypage', 'layer'], function() {
+            var laypage = layui.laypage
+                , layer = layui.layer;
+            getData(1,6);
+            // 查询数据
+            function getData(curr,limit){
+                $.ajax({
+                    url:"/hospital/news/listData",
+                    type:"POST",
+                    data:{"curr":curr,
+                        "limit":limit,flag:true}
+                    ,async:"false"
+                    ,success:function(data){
+                        console.log(data.count)
+                        // 判断数据是否存在商品
+                        if (data.data.length <= 0 ){
+                            return;
+                        }
+                        var html ="";
+                        $.each(data.data,function(index,news){
+                            html += ' <li><a href="#" onclick="x_admin_show(\'新闻详情\', \'newsContentPage?newsId='+news.id+'\')"> '+news.title+'<span class="right">'+news.createDate+'</span></a></li>';
+                        })
+                        $("#newContent").html(html);
+                        // 通过全局变量（page_flag）判断是否调用过分页
+                        if (!page_flag){
+                            //调用分页
+                            laypage.render({
+                                elem: 'page'
+                                ,count:data.count
+                                ,jump: function(obj){
+                                    page_flag = true;
+                                    getData(obj.curr,obj.limit);
+                                }
+                            });
+                        }
+                    }
+                })
+            }
+
+        });
+    // 轮播图获取
+    $(function () {
+
+    })
+    </script>
+</body>
+</html>

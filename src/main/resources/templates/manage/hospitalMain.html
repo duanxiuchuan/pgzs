@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<div th:replace="manage/common/header :: header"></div>
+<style>
+	img{height:100%;}
+</style>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md6">
+                <div class="layui-card">
+                    <div class="layui-card-header">新闻列表</div>
+                    <div class="layui-card-body" style="min-height: 320px;">
+                       <ul class="news-list" id="newContent">
+
+                       </ul>
+                        <div id="page" class="layui-text-center"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-card">
+                    <div class="layui-card-header">广告轮播</div>
+                    <div class="layui-card-body" style="min-height: 320px;">
+                        <div class="layui-carousel" id="test1" lay-filter="test1">
+                            <div carousel-item="" id="imgContent" height="100%">
+                                <div><img width="100%"  th:src="@{/images/shop/hot.jpg}"></div>
+                                <div><img  width="100%" th:src="@{/images/shop/hot.jpg}"></div>
+                                <div><img  width="100%" th:src="@{/images/shop/hot.jpg}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md4 money-sq">
+                <div class="layui-card">
+                    <div class="layui-card-header">额度管理</div>
+                   <div class="layui-card-body" style="min-height: 320px;">
+                       <div class="money-edu">
+                           可用额度:<span>[[${balance}]]元</span>
+                           <div class="layui-text-center">
+                                   <button type="button" id="apply" onclick="apply()" data-type=""></button>
+                           </div>
+                       </div>
+
+                   </div>
+                </div>
+            </div>
+            <div class="layui-col-md4 ">
+                <div class="layui-card">
+                    <div class="layui-card-header">消费</div>
+                    <div class="layui-card-body">
+                        <div id="bing" style="height: 320px; width: 100%"></div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md4 ">
+                <div class="layui-card">
+                    <div class="layui-card-header">近日消费记录</div>
+                    <div class="layui-card-body" style="min-height: 320px;">
+                        <div id="quxian" style="height: 320px; width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" th:src="@{/js/echarts.min.js}"></script>
+    <script>
+        layui.use(['laypage', 'layer','carousel'], function(){
+            var laypage = layui.laypage,carousel = layui.carousel
+                ,layer = layui.layer;
+
+            //常规轮播
+            var ins = carousel.render({
+                elem: '#test1'
+                ,height:"320px"
+                ,width:"100%"
+                ,arrow: 'hover'
+            });
+            function getHtml(data,html){
+                $.each(data,function (i, o) {
+                    html += '<div><a href="'+o.url+'" target="_blank"><img width="100%"  src="'+o.imgPath+'" title="'+o.title+'"></a></div>';
+                })
+                return html;
+            }
+            $.post("/hospital/carouselMap/listData",{"ifEnable":true},function (res) {
+                var data = res.data;
+                var html = '';
+                if (data.length == 1){
+                    html += getHtml(data,html);
+                    html += '<div><img width="100%"  src="/images/shop/hot.jpg"></div>' +
+                        '<div><img width="100%"  src="/images/shop/hot.jpg"></div>';
+
+                }else if (data.length == 2){
+                    html += getHtml(data,html);
+                    html += '<div><img width="100%"  src="/images/shop/hot.jpg"></div>';
+                }else {
+                    html += getHtml(data,html);
+                }
+                if (html != ""){
+                    $("#imgContent").html(html);
+                    //重置轮播
+                    ins.reload({
+                        elem: '#test1'
+                        ,height:"320px"
+                        ,width:"100%"
+                        ,arrow: 'hover'
+                    });
+                }
+
+            })
+        });
+   </script>
+
+    <!--新闻列表分页-->
+    <script>
+        var page_flag = false;
+        var list = new Array();
+
+        layui.use(['laypage', 'layer'], function() {
+            var laypage = layui.laypage
+                , layer = layui.layer;
+            getData(1,6);
+            // 查询数据
+            function getData(curr,limit){
+                $.ajax({
+                    url:"/hospital/news/listData",
+                    type:"POST",
+                    data:{"curr":curr,
+                        "limit":limit,flag:true}
+                    ,async:"false"
+                    ,success:function(data){
+                        // 判断数据是否存在商品
+                        if (data.data.length <= 0 ){
+                            return;
+                        }
+                        var html ="";
+                        $.each(data.data,function(index,news){
+                            html += ' <li><a href="#" onclick="x_admin_show(\'新闻详情\', \'newsContentPage?newsId='+news.id+'\')"> '+news.title+'<span class="right">'+news.createDate+'</span></a></li>';
+                        })
+                        $("#newContent").html(html);
+                        // 通过全局变量（page_flag）判断是否调用过分页
+                        if (!page_flag){
+                            //调用分页
+                            laypage.render({
+                                elem: 'page'
+                                ,count:data.count
+                                ,jump: function(obj){
+                                    page_flag = true;
+                                    getData(obj.curr,obj.limit);
+                                }
+                            });
+                        }
+                    }
+                })
+            }
+
+        });
+        //    新闻详情进入
+    </script>
+
+    <!--申请额度-->
+    <script>
+        $(function () {
+            $.ajax({
+                url:"/hospital/quota/quatoInfo",
+                type:"post",
+                // 判断状态
+                success:function (data) {
+                    if (data.type = 200){
+                        if (data.date){
+                            if (data.date.status == 0 || data.date.status == 3){
+                                $("#apply").html("申请中");
+                                $("#apply").attr("data-type",data.date.status);
+                                $("#apply").attr({"disabled":"disabled"});
+                                $("#apply").css("background","#c1c1c1");
+                            } else if (data.date.status == 1){
+                                $("#apply").html("申请提升额度");
+                                $("#apply").attr("data-type",data.date.status);
+                            } else if (data.date.status == 2){
+                                $("#apply").html("再次申请");
+                                $("#apply").attr("data-type",data.date.status);
+                            }
+                        } else {
+                            $("#apply").html("申请额度");
+                        }
+                    }
+                }
+            })
+        })
+
+
+        function apply() {
+            layer.confirm('确定提交申请吗', function (index) {
+                var type = $("#apply").attr("data-type");
+                $.ajax({
+                    url: "/hospital/quota/apply",
+                    type: "post",
+                    data: {"type": type},
+                    success: function (data) {
+                        console.log(data)
+                        if (data.type == 200) {
+                            $("#apply").html("申请中");
+                            $("#apply").attr({"disabled": "disabled"});
+                            $("#apply").css("background", "#c1c1c1");
+                        } else {
+                            layer.msg(data.content);
+                        }
+                    }
+                })
+            })
+        }
+    </script>
+
+
+
+    <!--饼图JS-->
+    <script type="text/javascript">
+        // 余额
+        var money1 = "[[${balance?:0}]]";
+        // 已消费金额
+        var money2= "[[${consume?:0}]]";
+        var dom = document.getElementById("bing");
+        var myChart = echarts.init(dom);
+        var app = {};
+        option = null;
+        app.title = '消费';
+
+        option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                x: 'left',
+                data:['可用金额','已消费金额']
+            },
+            series: [
+                {
+                    name:'金额',
+                    type:'pie',
+                    radius: ['50%', '70%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            show: true,
+                            textStyle: {
+                                fontSize: '30',
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data:[
+                        {value:money1, name:'可用金额'},
+                        {value:money2, name:'已消费金额'}
+                    ]
+                }
+            ]
+        };
+        ;
+        if (option && typeof option === "object") {
+            myChart.setOption(option, true);
+        }
+    </script>
+
+    <!--曲线图JS-->
+    <script type="text/javascript">
+
+        var days;
+        var amounts;
+        $.ajax({
+            type:"post",
+            url:"/manage/getData",
+            async:false,
+            success:function (data) {
+                days = data.days;
+                amounts = data.amounts;
+            }
+        })
+
+
+        var dom = document.getElementById("quxian");
+        var myChart = echarts.init(dom);
+        var app = {};
+        option = null;
+        option = {
+            xAxis: {
+                type: 'category',
+                data: days
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: amounts,
+                type: 'line'
+            }]
+        };
+        ;
+        if (option && typeof option === "object") {
+            myChart.setOption(option, true);
+        }
+
+    </script>
+    <script>
+    // 轮播图获取
+    $(function () {
+        function getHtml(data,html){
+            $.each(data,function (i, o) {
+                html += '<div><a href="'+o.url+'" target="_blank"><img width="100%"  src="'+o.imgPath+'" title="'+o.title+'"></a></div>';
+            })
+            return html;
+        }
+        $.post("/hospital/carouselMap/listData",{"ifEnable":true},function (res) {
+            var data = res.data;
+            var html = '';
+            if (data.length == 1){
+                html += getHtml(data,html);
+                html += '<div><img width="100%"  src="/images/shop/hot.jpg"></div>' +
+                    '<div><img width="100%"  src="/images/shop/hot.jpg"></div>';
+
+            }else if (data.length == 2){
+                html += getHtml(data,html);
+                html += '<div><img width="100%"  src="/images/shop/hot.jpg"></div>';
+            }else {
+                html += getHtml(data,html);
+            }
+            $("#imgContent").html(html);
+        })
+    })
+    </script>
+
+
+
+</body>
+</html>

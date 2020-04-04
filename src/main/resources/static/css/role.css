@@ -1,0 +1,16 @@
+.page-main{ padding:20px;}
+.page-main h2{  color: #1d8fff;margin-bottom: 20px;}
+.page-main .page-title{ font-size: 20px;margin-bottom: 20px;height: 40px; line-height: 40px;}
+.fr{ float: right}
+.page-main .page-left-nav{position: relative;left: 1px; z-index: 9999;}
+.page-main .page-left-nav li{ height: 40px; line-height: 40px; background: #f3f3f3;border-bottom: 1px solid #ccc; padding:0 40px 0 20px; cursor: pointer; border-right: 1px solid #ccc;}
+.page-main .page-left-nav li.active{background: #fff;color: #1d8fff; border-color: #eee;}
+.page-main .page-left-nav li span{ color: #999;}
+.page-all{border: 1px solid #ccc;}
+.page-main .page-right-content{ padding: 20px}
+.page-main .page-right-content h2{ font-size: 16px; color: #333;margin-bottom: 20px;}
+.page-main .page-right-content h2.layui-colla-title{margin-bottom: 0;font-size: 14px;}
+.page-main .page-right-content .layui-colla-item{margin-bottom: 30px;}
+body .layui-collapse{border: none}
+.page-main .layui-col-md8{ border-left: 1px solid #ccc}
+.page-right-content{display: none}

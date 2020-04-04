@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<div th:replace="manage/common/header :: header"></div>
+<link rel="stylesheet" th:href="@{/css/role.css}"/>
+<body>
+<div class="page-main">
+    <h2><th:block th:text="#{admin.role.setRoleResources}"></th:block></h2>
+    <div class="page-title" style="font-size: 14px">
+        <label th:text="#{admin.role.roleManager}"></label>
+        <span class="fr">
+            <button shiro:hasPermission="/manage/role/save" id="add" class="layui-btn layui-btn-normal">
+                <i class="layui-icon layui-icon-add-1"></i><th:block th:text="#{admin.role.addRole}"></th:block>
+            </button>
+        </span>
+    </div>
+    <div class="layui-row page-all layui-clear">
+        <div class="layui-col-md2">
+            <ul class="page-left-nav">
+                <th:block th:each="role, roleStat : ${roles}">
+                    <li th:onclick="'loadRoleResources(' + ${role.id} + ')'"
+                        th:class="${roleStat.index == 0} ? 'right01 active' : 'right01'" th:data-id="${role.id}">
+                        <label th:text="${role.name}"></label>
+                        <span class="fr hover">
+                            <label th:text="${role.isBuiltIn == 0} ? #{admin.role.systemDefault}"></label>
+                            <a shiro:hasPermission="/manage/role/update" href="#" th:value="${role.id}"
+                               th:title="#{admin.common.update}" th:rolename="${role.name}" class="update"
+                               th:if="${role.isBuiltIn != 0}"><i class="layui-icon layui-icon-edit"></i></a>
+                            <a shiro:hasPermission="/manage/role/delete" href="#" th:value="${role.id}"
+                               th:title="#{admin.common.delete}" th:rolename="${role.name}" class="del"
+                               th:if="${role.isBuiltIn != 0}"><i class="layui-icon layui-icon-delete"></i></a>
+                        </span>
+                    </li>
+                </th:block>
+            </ul>
+        </div>
+        <div style="padding: 10px;" class="layui-col-md10">
+            <iframe src='' id="topFrame" th:name="topFrame" frameborder="0" scrolling="yes"
+                    class="x-iframe" style="width: 100%; height: 700px;"></iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+	var defaultId = $(".active").attr("data-id");
+	loadRoleResources(defaultId);
+    function loadRoleResources(roleId) {
+        document.getElementById("topFrame").src = "/manage/role/loadRoleResources?roleId=" + roleId;
+    }
+
+    layui.use(['element', 'form'], function () {
+        var $ = layui.jquery
+            , element = layui.element, form = layui.form; //Tab的切换功能，切换事件监听等，需要依赖element模块
+
+        //左边点击事情
+        $('body').on('click', '.page-left-nav li', function (othis) {
+            $(".page-left-nav li").removeClass('active');
+            othis.currentTarget.className = 'active';
+            var index = $(".page-left-nav li").index(this) + 1;
+            $(".page-right-content").removeClass("layui-show");
+            // $(".page-right-content").index(this).addClass("layui-show");
+            $("#right0" + index).addClass('layui-show');
+
+
+        });
+
+        // 删除角色
+        $(".del").click(function () {
+            var roleId = $(this).attr("value");
+            var roleName = $(this).attr("rolename");
+            layer.confirm('确定要删除"' + roleName + '"角色吗？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    url: "/manage/role/delete",
+                    type: "POST",
+                    data: {
+                        roleId: roleId
+                    },
+                    success: function (data) {
+                        if (data.status == 200) {
+                            layer.msg(data.result, {time: 2000, icon: 1}, function () {
+                                location.reload(true);
+                            });
+                        } else {
+                            layer.msg(data.result, {time: 2000, icon: 5});
+                        }
+                    }
+                });
+            }, function () {
+               /*  layer.msg('也可以这样', {
+                    time: 2000, //20s后自动关闭
+                    btn: ['明白了', '知道了']
+                }); */
+            });
+        });
+
+        /**
+         * 编辑角色
+         */
+        $(".update").click(function () {
+            var roleId = $(this).attr("value");
+            var roleName = $(this).attr("rolename");
+            layer.open({
+                type: 1,
+                title: '编辑角色',
+                skin: 'layui-layer-rim', //加上边框
+                area: ['420px', '190px'], //宽高
+                btn: ['保存', '取消'],
+                content: '<div style="padding: 5%"><input id="roleName" class="layui-input" value="' + roleName + '" placeholder="请输入角色名称"></div>',
+                yes: function (index) {
+                    var roleName = $("#roleName").val();
+                    if (isNull(roleName.trim()) == '') {
+                        layer.msg("名称不能为空", {time: 2000, icon: 10});
+                        return false;
+                    }
+                    $.ajax({
+                        url: "/manage/role/update",
+                        type: "POST",
+                        data: {
+                            id: roleId,
+                            name: roleName
+                        },
+                        success: function (data) {
+                            if (data.status == 200) {
+                                layer.msg(data.result, {time: 2000, icon: 1}, function () {
+                                    location.reload(true);
+                                });
+                            } else {
+                                layer.msg(data.result, {time: 2000, icon: 5});
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+        //添加角色
+        $("#add").click(function () {
+            layer.open({
+                type: 1,
+                title: '添加角色',
+                skin: 'layui-layer-rim', //加上边框
+                area: ['420px', '190px'], //宽高
+                btn: ['保存', '取消'],
+                content: '<div style="padding: 5%"><input required="required" id="roleName" class="layui-input" placeholder="请输入角色名称"></div>',
+                yes: function (index) {
+                    var roleName = $("#roleName").val();
+                    if (isNull(roleName.trim()) == '') {
+                        layer.msg("名称不能为空", {time: 2000, icon: 10});
+                        return false;
+                    }
+                    $.ajax({
+                        url: "/manage/role/save",
+                        type: "POST",
+                        data: {
+                            name: roleName
+                        },
+                        success: function (data) {
+                            if (data.status == 200) {
+                                layer.msg(data.result, {time: 2000, icon: 1}, function () {
+                                    location.reload(true);
+                                });
+                            } else {
+                                layer.msg(data.result, {time: 2000, icon: 5});
+                            }
+                        }
+                    });
+                }
+            });
+        })
+    });
+</script>
+</body>
+</html>

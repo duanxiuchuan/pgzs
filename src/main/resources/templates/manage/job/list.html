@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<div th:replace="manage/common/header :: header"></div>
+<body>
+<div class="x-body">
+    <div class="layui-row">
+        <div class="layui-form layui-col-md12 x-so">
+            <input type="text" id="name" name="name" placeholder="请输入名称" autocomplete="off" class="layui-input">
+            <button class="layui-btn" data-type="reload" ><i class="layui-icon">&#xe615;</i></button>
+        </div>
+    </div>
+    <div class="layui-row">
+        <table class="layui-hide" id="tableData" lay-filter="tableData"></table>
+    </div>
+</div>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="delAll()">
+            <i class="layui-icon"></i><th:block th:text="#{admin.common.batchDelete}"></th:block>
+        </button>
+        <button class="layui-btn layui-btn-sm" onclick="add()">
+            <i class="layui-icon"></i>
+            <label th:text="#{admin.common.add}"></label>
+        </button>
+        <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);">
+            <i class="layui-icon">&#xe666;</th:block></i></a>
+    </div>
+</script>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="start">启动</a>
+    <a class="layui-btn layui-btn-xs" lay-event="stop">暂停</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script>
+
+    function add() {
+        x_admin_show('添加','addPage');
+    }
+    
+    layui.use(['form','table', 'layer'], function () {
+    	$ = layui.jquery;
+        var form = layui.form,
+        table = layui.table,
+        layer = layui.layer;
+        table.render({
+            elem: '#tableData'
+            , url: 'listData'
+            , toolbar: '#toolbarDemo'
+            , title: '任务数据表'
+            , cols: [
+                [
+                    {type: 'checkbox', fixed: 'left'}
+                    , {field: 'name', title: message('admin.jobTask.name')}
+                    , {field: 'group', title: message('admin.jobTask.group')}
+                    , {field: 'cron', title: message('admin.jobTask.cron')}
+                    , {field: 'code', title: message('admin.jobTask.code')}
+                    , {field: 'desc', title: message('admin.jobTask.desc')}
+                    , {field: 'isValid', title: message('admin.jobTask.isValid'), templet: function (res) {
+                        if (res.isValid == null) {
+                        	return '';
+                        }
+                        if (res.isValid == 0) {
+                        	return '<span>暂停</span>';
+                        }
+                        if (res.isValid == 1) {
+                        	return '<span>启动</span>';
+                        }
+                    }}
+                    , {fixed: 'right', title: message('admin.common.action'), toolbar: '#barDemo', width: 230}
+                ]
+            ]
+            , page: true
+
+        });
+        var $ = layui.$, active = {
+            reload: function(){
+                var name = $("#name").val();
+                table.reload('tableData', {
+                    where: {
+                        name: $("#name").val()
+                    }
+                });
+            }
+        }
+
+        $('.layui-form .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+       
+        //头工具栏事件
+        table.on('toolbar(tableData)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                    break;
+                case 'getCheckLength':
+                    var data = checkStatus.data;
+                    layer.msg('选中了：' + data.length + ' 个');
+                    break;
+                case 'isAll':
+                    layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                    break;
+            }
+            ;
+        });
+
+        //监听行工具事件
+        table.on('tool(tableData)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                layer.confirm('确定删除吗', function (index) {
+                    $.ajax({
+                        url: 'delete',
+                        type: 'POST',
+                        data: {id: data.id},
+                        success: function (data) {
+                        	layer.close(index);
+                        	if (data.status) {
+		                        layer.msg(data.result, {icon: 1, time: 1000}, function() {
+		                        	location.reload(true);
+		                        })
+                        	} else {
+		                        layer.msg(data.result, {icon: 2, time: 1000})
+                        	}
+                        }
+                    });
+
+                });
+            } else if (obj.event === 'edit') {
+                x_admin_edit('编辑', 'editPage', '600', '', data.id);
+            } else if (obj.event === 'view') {
+                x_admin_edit('详情', 'view', '', '600', data.id);
+            } else if (obj.event === 'start') {
+            	layer.confirm('真的启动么', {icon: 3, title:'提示'}, function (index) {
+                    $.ajax({
+                        url: 'resume',
+                        type: 'POST',
+                        data: {id: data.id},
+                        success: function (data) {
+                        	layer.close(index);
+                        	if (data.status) {
+		                        layer.msg(data.result, {icon: 1, time: 1000}, function() {
+		                        	location.reload(true);
+		                        })
+                        	} else {
+		                        layer.msg(data.result, {icon: 2, time: 1000})
+                        	}
+                        }
+                    });
+                });
+            } else if (obj.event === 'stop') {
+            	layer.confirm('真的暂停么', {icon: 3, title:'提示'}, function (index) {
+                    $.ajax({
+                        url: 'pause',
+                        type: 'POST',
+                        data: {id: data.id},
+                        success: function (data) {
+                        	layer.close(index);
+                        	if (data.status) {
+		                        layer.msg(data.result, {icon: 1, time: 1000}, function() {
+		                        	location.reload(true);
+		                        })
+                        	} else {
+		                        layer.msg(data.result, {icon: 2, time: 1000})
+                        	}
+                        }
+                    });
+                   
+                });
+            } 
+        });
+    });
+    
+</script>
+
+</body>
+</html>

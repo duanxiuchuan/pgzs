@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="manage/common/header :: header"></div>
+
+<link rel="stylesheet" href="/manage/css/layui.css">
+
+<style>
+.sel_btn {
+	display: inline-block;
+	font-size: 18px;
+	line-height: 24px;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	cursor: pointer;
+	color: rgb(255, 255, 255);
+	background-color: rgb(24, 159, 146);
+	-webkit-appearance: none;
+	width: 86%;
+	padding: 12px 24px;
+	margin: 0px;
+	border-radius: 3px;
+	border-width: initial;
+	border-style: none;
+	border-color: initial;
+	border-image: initial;
+	outline: none;
+}
+</style>
+<body class="login-bg">
+
+	<div class="login layui-anim layui-anim-up">
+		<div class="message">
+			<label th:text="#{new.projectName}"></label>
+		</div>
+
+		<div id="darkbannerwrap"></div>
+		<form id="loginform" class="layui-form" action="" method="post">
+			<input name="userName" id="userName" placeholder="用户名" value="" type="text" class="layui-input">
+			<hr class="hr15">
+			<input name="password" id="password" placeholder="密码" value="" type="password" class="layui-input">
+			<hr class="hr15">
+			<!-- <a style="float: right; margin-bottom: 10px; margin-right: 5px;">忘记密码</a> -->
+			<span class="pull-right"> <a th:class="sel_btn" type="submit" id="submit">登录</a>
+			</span>
+		</form>
+	</div>
+	<script type="text/javascript" src="/manage/layui.js"></script>
+	<script type="text/javascript">
+	layui.use(['layer','form'], function(){ //独立版的layer无需执行这一句
+  		var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+  		
+ 		$("#submit").click(function () {
+		    var userName = $("#userName").val();
+		    var password = $("#password").val();
+		    if(userName == null || userName == ""){
+		    	layer.msg('请输入用户名', {time: 2000, icon:10});
+		    	return false;
+		    }		   
+		    if(password == null || password == ""){
+		    	layer.msg('请输入密码', {time: 2000, icon:10});
+		    	return false;
+		    }
+		    $("#submit").attr("disabled", true);
+		    $.ajax({
+				type : "POST",
+				url : "/manage/submit",
+				data : $('#loginform').serialize(),
+				dataType : "json",
+				success : function(data) {
+					if (data.status == 200) {
+						layer.msg(data.result, {
+							time : 2000,
+							icon : 1
+						});
+						setTimeout(function() {
+							location.href = '/manage/index';
+						}, 2000);
+					} else {
+						layer.msg(data.result, {
+							time : 2000,
+							icon : 5
+						});
+						$("#submit").attr("disabled", false);
+					}
+				},
+				error : function(data) {
+					console.log(data);
+					$("#submit").attr("disabled", false);
+				}
+			});
+		});
+	
+ 		// enter键监听
+ 		$(document).keyup(function(event){
+ 			if(event.keyCode == 13) {
+ 			 	$("#submit").trigger("click");
+ 			}
+ 		});
+	});
+	</script>
+</body>
+</html>

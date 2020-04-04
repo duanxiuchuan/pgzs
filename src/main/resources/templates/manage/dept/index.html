@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<div th:replace="manage/common/header :: header"></div>
+<link rel="stylesheet" th:href="@{/css/role.css}"/>
+<link rel="stylesheet" th:href="@{/css/treeselect.css}">
+
+<link rel="stylesheet" th:href="@{/css/bootstrap/bootstrap.css}">
+<link rel="stylesheet" th:href="@{/css/bootstrap-treeview.css}">
+<script th:src="@{/js/bootstrap-treeview.js}" type="text/javascript"></script>
+
+<body>
+<div class="page-main">
+    <h2><label th:text="#{admin.dept.setDeptUser}"></label></h2>
+    <div class="page-title" style="font-size: 14px">
+        <label th:text="#{admin.dept.deptManager}"></label>
+        <span class="fr">
+            <button id="refresh" onclick="javascript:location.replace(location.href);" class="layui-btn" style="margin: 5px">
+                <i class="layui-icon layui-icon-refresh"></i>
+                <th:block th:text="#{admin.common.refresh}"></th:block>
+            </button>
+        </span>
+        <span class="fr" shiro:hasPermission="/manage/dept/delete">
+            <button id="delete" class="layui-btn layui-btn-danger" style="margin: 5px">
+                <i class="layui-icon layui-icon-delete"></i>
+                <th:block th:text="#{admin.dept.deleteDept}"></th:block>
+            </button>
+        </span>
+        <span class="fr" shiro:hasPermission="/manage/dept/update">
+            <button id="update" class="layui-btn" style="margin: 5px">
+                <i class="layui-icon layui-icon-edit"></i>
+                <th:block th:text="#{admin.dept.updateDept}"></th:block>
+            </button>
+        </span>
+        <span class="fr" shiro:hasPermission="/manage/dept/save">
+            <button id="add" class="layui-btn layui-btn-normal" style="margin: 5px">
+                <i class="layui-icon layui-icon-add-1"></i>
+                    <th:block th:text="#{admin.dept.addDept}"></th:block>
+            </button>
+        </span>
+    </div>
+    <div class="layui-row page-all layui-clear">
+        <div style="padding: 10px;" class="layui-col-md1">
+            <div id="treeEquip" class="treeview"></div>
+        </div>
+        <div class="layui-col-md11">
+            <iframe th:src="'/manage/manage/list?deptId='+${deptId}" id="topFrame" th:name="topFrame" frameborder="0" scrolling="yes" class="x-iframe" style="width: 100%; height: 700px;"></iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var deptId = 0;
+        var deptName = "无";
+
+        //添加角色
+        $("#add").click(function () {
+            layer.open({
+                type: 1,
+                title: '添加部门',
+                skin: 'layui-layer-rim', //加上边框
+                area: ['420px', '280px'], //宽高
+                btn: ['保存', '取消'],
+                content: '<div style="padding: 5%">' +
+                '<input type="hidden" id="parentId" name="parentId" value="' + deptId + '">' +
+                '<div class="layui-form-item"><label for="password" class="layui-form-label" style="width: 100px"><span class="x-red">*</span>上级部门</label>' +
+                '<div class="layui-input-inline"><input id="parentName" disabled required="required" class="layui-input" style="margin: 5px" value="' + deptName + '" placeholder="请输入部门名称"></div></div>' +
+                '<div class="layui-form-item"><label for="password" class="layui-form-label" style="width: 100px"><span class="x-red">*</span>部门名称</label>' +
+                '<div class="layui-input-inline"><input id="deptName" required="required" class="layui-input" style="margin: 5px" maxlength="8" placeholder="请输入部门名称"></div></div></div>',
+                yes: function (index) {
+                    var deptNames = $("#deptName").val();
+                    var parentIds = $("#parentId").val();
+                    if (isNull(deptNames.trim()) == '') {
+                        layer.msg("名称不能为空", {time: 2000, icon: 10});
+                        return false;
+                    }
+                    $.ajax({
+                        url: "/manage/dept/save",
+                        type: "POST",
+                        data: {
+                            parentId: parentIds,
+                            name: deptNames
+                        },
+                        success: function (data) {
+                            if (data.status == 200) {
+                                layer.msg(data.result, {time: 2000, icon: 1}, function () {
+                                    location.reload(true);
+                                });
+                            } else {
+                                layer.msg(data.result, {time: 2000, icon: 5});
+                            }
+                        }
+                    });
+                }
+            });
+        })
+
+        //添加角色
+        $("#update").click(function () {
+            if (deptId == 0) {
+                layer.msg("请选择需要修改的部门", {time: 2000, icon: 10});
+                return false;
+            }
+            layer.open({
+                type: 1,
+                title: '编辑部门',
+                skin: 'layui-layer-rim', //加上边框
+                area: ['420px', '200px'], //宽高
+                btn: ['修改', '取消'],
+                content: '<div style="padding: 5%">' +
+                '<input id="deptName" required="required" class="layui-input" style="margin: 5px" maxlength="8" value="' + deptName + '" placeholder="请输入部门名称">' +
+                '</div>',
+                yes: function (index) {
+                    var deptNames = $("#deptName").val();
+                    if (isNull(deptNames.trim()) == '') {
+                        layer.msg("名称不能为空", {time: 2000, icon: 10});
+                        return false;
+                    }
+                    $.ajax({
+                        url: "/manage/dept/update",
+                        type: "POST",
+                        data: {
+                            id: deptId,
+                            name: deptNames
+                        },
+                        success: function (data) {
+                        	 if (data.status == 200) {
+                                 layer.msg(data.result, {time: 2000, icon: 1}, function () {
+                                     location.reload(true);
+                                 });
+                             } else {
+                                 layer.msg(data.result, {time: 2000, icon: 5});
+                             }
+                        }
+                    });
+                }
+            });
+        });
+
+
+        //添加角色
+        $("#delete").click(function () {
+            if (deptId == 0) {
+                layer.msg("请选择需要删除的部门", {time: 2000, icon: 10});
+                return false;
+            }
+
+            layer.confirm('确定要删除吗？', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    url: "/manage/dept/delete",
+                    type: "POST",
+                    data: {
+                        id: deptId
+                    },
+                    success: function (data) {
+                    	 if (data.status == 200) {
+                             layer.msg(data.result, {time: 2000, icon: 1}, function () {
+                                 location.reload(true);
+                             });
+                         } else {
+                             layer.msg(data.result, {time: 2000, icon: 5});
+                         }
+                    }
+                });
+            }, function () {
+                layer.msg('的确很重要', {icon: 1});
+            });
+        })
+
+        $('#treeEquip').treeview({
+            data: getDept(),         // 数据源
+            showCheckbox: false,   //是否显示复选框
+            highlightSelected: true,    //是否高亮选中
+            //nodeIcon: 'glyphicon glyphicon-user',    //节点上的图标
+            //nodeIcon: 'glyphicon glyphicon-globe',
+            emptyIcon: '',    //没有子节点的节点图标
+            multiSelect: false,    //多选
+            onNodeSelected: function (event, data) {
+                document.getElementById("topFrame").src = "/manage/manage/list?deptId=" + data.id;
+                console.log(data.id);
+                console.log(data.text);
+                deptId = data.id;
+                deptName = data.text;
+            },
+            onNodeUnselected: function (event, data) {
+                deptId = 0;
+                deptName = "";
+            }
+        });
+
+        function getDept() {
+            var exc = "";
+            $.ajax({
+                type: "POST",
+                url: "/manage/dept/loadDept",
+                async: false,
+                dataType: "json",
+                success: function (result) {
+                    exc = result;
+                },
+                error: function () {
+                    alert("树形结构加载失败！")
+                }
+            });
+            return exc;
+        }
+
+        // $.ajax({
+        //     type: "POST",
+        //     url: "/admin/dept/loadDept",
+        //     async: false,
+        //     dataType: "json",
+        //     success: function (result) {
+        //         $('#treeEquip').treeview({
+        //             data: result,         // 数据源
+        //             showCheckbox: true,   //是否显示复选框
+        //             highlightSelected: true,    //是否高亮选中
+        //             //nodeIcon: 'glyphicon glyphicon-user',    //节点上的图标
+        //             nodeIcon: 'glyphicon glyphicon-globe',
+        //             emptyIcon: '',    //没有子节点的节点图标
+        //             multiSelect: false,    //多选
+        //             onNodeSelected: function (event, data) {
+        //                 document.getElementById("topFrame").src="/admin/admin/list?deptId=" + data.id;
+        //                 console.log(data.id);
+        //                 console.log(data.text);
+        //                 deptId = data.id;
+        //                 deptName = data.text;
+        //             },
+        //             onNodeUnselected: function (event, data) {
+        //                 alert(":");
+        //                 console.log(data.id);
+        //                 console.log(data.text);
+        //             }
+        //         });
+        //     },
+        //     error: function () {
+        //         alert("树形结构加载失败！")
+        //     }
+        // });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="manage/common/header :: header"></div>
+
+<body>
+<div class="x-body">
+    <form th:id="form" class="layui-form layui-form-pane" style="text-aglin:center">
+        <div class="layui-form-item">
+            <input th:type="hidden" th:name="custId" th:value="${cust.custId}">
+            <div class="layui-inline">
+                <label th:for="name" class="layui-form-label">
+                    <span class="x-red">*</span>客户名称
+                </label>
+                <div class="layui-input-inline">
+                    <input th:type="text" th:id="name" th:name="name" th:value="${cust.name}" lay-verify="required"autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <span class="x-red"></span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label th:for="value" class="layui-form-label">
+                <span class="x-red">*</span>客户电话
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="phone" th:name="phone" th:value="${cust.phone}" lay-verify="required|phone" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red"></span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label th:for="type" class="layui-form-label">
+                邮箱
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="email" th:name="email" th:value="${cust.email}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label th:for="type" class="layui-form-label">
+                户型
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="layout" th:name="layout" th:value="${cust.layout}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label th:for="type" class="layui-form-label">
+                地区
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="address" th:name="address"  th:value="${cust.address}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label th:for="type" class="layui-form-label">
+                楼盘名称
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="houseName" th:name="houseName"  th:value="${cust.houseName}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label th:for="type" class="layui-form-label">
+                建筑面积
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="area" th:name="area"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-submit="" lay-filter="edit">保存</button>
+        </div>
+
+    </form>
+</div>
+<script>
+    layui.config({
+        base: '/definModule/'
+    }).use(['form', 'layer','dictSelect'], function () {
+        $ = layui.jquery;
+        var form = layui.form
+            , layer = layui.layer
+            , dictSelect = layui.dictSelect;
+
+        //自定义验证规则
+        form.verify({
+
+        });
+
+        //监听提交
+        form.on('submit(edit)', function (data) {
+            params = data.field;
+            $.post("/manage/cust/update", params, function (data) {
+                if (data.status == 200) {
+                    layer.msg(data.result, {time: 2000, icon: 1}, function () {
+                        // 父页面刷新
+                        parent.location.reload();
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前frame
+                        parent.layer.close(index);
+                    });
+                } else {
+                    layer.msg(data.result, {time: 2000, icon: 5});
+                    $("#submit").prop("disabled", false);
+                }
+            });
+            return false;
+        });
+
+
+    });
+</script>
+</body>
+</html>

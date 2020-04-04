@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="manage/common/header :: header"></div>
+
+<body>
+<div class="x-body">
+    <form class="layui-form layui-form-pane">
+        <input th:type="hidden" th:name="id" th:value="${jobTask.id}">
+         <div class="layui-form-item">
+            <label for="userName" class="layui-form-label">
+                <span class="x-red">*</span>任务名称
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="name" th:name="name" th:value="${jobTask.name}" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red">*</span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="userName" class="layui-form-label">
+                <span class="x-red">*</span>任务所在组
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="group" th:name="group" th:value="${jobTask.group}" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red">*</span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="userName" class="layui-form-label">
+                <span class="x-red">*</span>表达式
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="cron" th:name="cron" th:value="${jobTask.cron}" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red">*</span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="userName" class="layui-form-label">
+                <span class="x-red">*</span>任务类名
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="code" th:name="code" th:value="${jobTask.code}" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                <span class="x-red">*</span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="userName" class="layui-form-label">
+                描述
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="desc" th:name="desc" th:value="${jobTask.desc}" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-submit="" lay-filter="edit">修改</button>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form', 'layer'], function () {
+        $ = layui.jquery;
+        var form = layui.form
+            , layer = layui.layer;
+
+        //自定义验证规则
+        form.verify({
+            nikename: function (value) {
+                if (value.length < 5) {
+                    return '昵称至少得5个字符啊';
+                }
+            }
+            , pass: [/(.+){6,12}$/, '密码必须6到12位']
+            , repass: function (value) {
+                if ($('#password').val() != $('#repassword').val()) {
+                    return '两次密码不一致';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(edit)', function (data) {
+            $("#form").find("button").prop("disabled", true);
+            if (data.field.isEnable == "on") {
+                data.field.isEnable = 0;
+            } else {
+                data.field.isEnable = 1;
+            }
+            params = data.field;
+            $.post("/admin/job/update", params, function (data) {
+                if (data.status == 0) {
+                    layer.msg(data.result, {time: 2000, icon: 5});
+                    $("#submit").prop("disabled", false);
+                } else {
+                    layer.msg(data.result, {time: 2000, icon: 6}, function () {
+                        // 父页面刷新
+                        parent.location.reload();
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前frame
+                        parent.layer.close(index);
+                    });
+                }
+            });
+            return false;
+        });
+
+
+    });
+</script>
+</body>
+</html>

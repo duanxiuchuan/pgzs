@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<div th:replace="manage/common/header :: header"></div>
+<body>
+<div class="x-body">
+    <div class="layui-row">
+        <div class="layui-form layui-col-md12 x-so">
+            <input type="text" id="userName" name="userName" placeholder="请输入用户名" autocomplete="off"
+                   class="layui-input">
+            <input type="text" id="phone" name="phone" placeholder="请输入手机号" autocomplete="off" class="layui-input">
+            <input type="hidden" id="deptId" name="deptId" th:value="${deptId}">
+            <button class="layui-btn" data-type="reload"><i class="layui-icon">&#xe615;</i></button>
+        </div>
+    </div>
+    <div class="layui-row">
+        <table class="layui-hide" id="tableData" lay-filter="tableData"></table>
+    </div>
+</div>
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+
+        <button shiro:hasPermission="/manage/dict/delete" class="layui-btn layui-btn-sm layui-btn-danger" onclick="delAll()">
+            <i class="layui-icon"></i>
+            <th:block th:text="#{admin.common.batchDelete}"></th:block>
+        </button>
+        <button shiro:hasPermission="/manage/dict/addPage" class="layui-btn layui-btn-sm" onclick="add()">
+            <i class="layui-icon"></i>
+            <label th:text="#{admin.common.add}"></label>
+        </button>
+        <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);">
+            <i class="layui-icon">&#xe666;</th:block></i></a>
+    </div>
+</script>
+
+<script type="text/html" id="barDemo">
+    <a shiro:hasPermission="/manage/dict/editPage" class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a shiro:hasPermission="/manage/dict/delete" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="view">查看</a>
+</script>
+
+<script>
+
+    function add() {
+        x_admin_show('添加用户', 'addPage');
+    }
+
+    layui.use('table', function () {
+        var table = layui.table;
+        table.render({
+            elem: '#tableData'
+            , url: 'w'
+            , toolbar: '#toolbarDemo'
+            , title: '用户数据表'
+            , cols: [
+                [
+
+                    {type: 'checkbox', fixed: 'left'}
+                    , {field: 'name', title: "[[#{admin.dict.name}]]", sort: true, fixed: 'left'}
+                    , {field: 'type', title: "[[#{admin.dict.value}]]", sort: true, fixed: 'left'}
+                    , {field: 'typeName', title: "[[#{admin.dict.type}]]", sort: true,}
+                    , {field: 'value', title: "[[#{admin.dict.typeName}]]", width: 150}
+                    , {field: 'sort', title: "[[#{admin.dict.sort}]]", width: 100, sort: true}
+                    , {field: 'createDate', title: "[[#{admin.common.createDate}]]", width: 160, sort: true}
+                    , {field: 'createName', title: "[[#{admin.common.creator}]]", width: 100}
+                    , {field: 'modifyDate', title: "[[#{admin.common.modifyDate}]]", width: 160, sort: true}
+                    , {field: 'modifyName', title: "[[#{admin.common.modifier}]]", width: 100}
+                    , {fixed: 'right', title: "[[#{admin.common.action}]]", toolbar: '#barDemo', width: 200}
+                ]
+            ]
+            , page: true
+
+        });
+        var $ = layui.$, active = {
+            reload: function () {
+                var userName = $("#userName").val();
+                table.reload('tableData', {
+                    where: {
+                        deptId: $("#deptId").val(),
+                        userName: $("#userName").val(),
+                        phone: $("#phone").val()
+                    }
+                });
+            }
+        }
+
+        $('.layui-form .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+        //头工具栏事件
+        table.on('toolbar(tableData)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    layer.alert(JSON.stringify(data));
+                    break;
+                case 'getCheckLength':
+                    var data = checkStatus.data;
+                    layer.msg('选中了：' + data.length + ' 个');
+                    break;
+                case 'isAll':
+                    layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                    break;
+            }
+            ;
+        });
+
+        //监听行工具事件
+        table.on('tool(tableData)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                layer.confirm('确定删除吗', function (index) {
+                    $.ajax({
+                        url: 'delete',
+                        type: 'POST',
+                        data: {id: data.id},
+                        success: function (data) {
+                            if (data.status == 0) {
+                                layer.msg(data.result, {icon: 2, time: 1000});
+                            } else {
+                                obj.del();
+                                layer.close(layer.msg(data.result, {icon: 1, time: 1000}));
+                            }
+                        }
+                    });
+
+                });
+            } else if (obj.event === 'edit') {
+                x_admin_edit('编辑', 'editPage', '', '', data.id);
+            } else if (obj.event === 'view') {
+                x_admin_edit('编辑', 'view', '', '', data.id);
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

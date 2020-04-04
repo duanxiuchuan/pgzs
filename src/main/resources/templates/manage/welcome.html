@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<div th:replace="manage/common/header :: header"></div>
+<style>
+    .center {
+        width: 500px;
+        height: 500px;
+        color:#000;
+        margin: 0 auto;
+
+
+        display: -webkit-box;
+        -webkit-box-orient: horizontal;
+        -webkit-box-pack: center;
+        -webkit-box-align: center;
+
+        display: -moz-box;
+        -moz-box-orient: horizontal;
+        -moz-box-pack: center;
+        -moz-box-align: center;
+
+        display: -o-box;
+        -o-box-orient: horizontal;
+        -o-box-pack: center;
+        -o-box-align: center;
+
+        display: -ms-box;
+        -ms-box-orient: horizontal;
+        -ms-box-pack: center;
+        -ms-box-align: center;
+
+        display: box;
+        box-orient: horizontal;
+        box-pack: center;
+        box-align: center;
+    }
+</style>
+<body>
+<div class="center">
+    <div class="text">
+        <h1 style="font-size:32px;"><th:block th:text="#{new.projectName}"></th:block></h1>
+    </div>
+</div>
+</body>
+</html>

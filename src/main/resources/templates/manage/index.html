@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<div th:replace="manage/common/header :: header"></div>
+
+<body>
+<!-- 椤堕儴寮�濮� -->
+<div class="container">
+    <div class="logo"><a href="javascript:location.reload()"><th:block th:text="#{admin.common.manageSystem}"></th:block></a></div>
+    <div class="left_open">
+        <i th:title="#{manage.common.openLeftMenu}" class="iconfont">&#xe699;</i>
+    </div>
+    <ul class="layui-nav left fast-add" lay-filter="">
+        <li class="layui-nav-item">
+        </li>
+    </ul>
+    <ul class="layui-nav right" lay-filter="">
+        <li class="layui-nav-item">
+            <a href="javascript:;" th:text="${admin.realName}"></a>
+            <dl class="layui-nav-child">
+                <dd><a onclick="x_admin_show('修改密码','/manage/manage/updatePasswordPage','500','500')">修改密码</a></dd>
+                <dd><a href="/manage/logout"><th:block th:text="#{admin.common.logout}"></th:block></a></dd>
+            </dl>
+        </li>
+    </ul>
+
+</div>
+<div class="left-nav">
+    <div id="side-nav">
+        <ul id="nav">
+            <th:block th:each="topRes : ${topResources}">
+                <li th:if="${topRes.hasChildren}">
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe6b8;</i>
+                        <cite><th:block th:text="${topRes.name}"></th:block></cite>
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    <ul class="sub-menu">
+                        <th:block th:each="secordRes : ${secordResources}">
+                            <th:block th:if="${secordRes.parentId} eq ${topRes.id}">
+                                <li shiro:hasPermission="${secordRes.url}">
+                                    <a th:_href="${secordRes.url}">
+                                        <i class="iconfont">&#xe6a7;</i>
+                                        <cite><th:block th:text="${secordRes.name}"></th:block></cite>
+                                    </a>
+                                </li>
+                            </th:block>
+                        </th:block>
+                    </ul>
+                </li>
+            </th:block>
+        </ul>
+    </div>
+</div>
+<div class="page-content">
+    <div class="layui-tab tab" lay-filter="xbs_tab" lay-allowclose="false">
+        <ul class="layui-tab-title">
+            <li class="home"><i class="layui-icon">&#xe68e;</i><th:block th:text="#{admin.common.myDesktop}"></th:block></li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <iframe th:src='main' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="page-content-bg"></div>
+<!-- 鍙充晶涓讳綋缁撴潫 -->
+<!-- 涓儴缁撴潫 -->
+<!-- 搴曢儴寮�濮� -->
+<div class="footer">
+    <div class="copyright">Copyright 重庆品冠装饰 All Rights Reserved</div>
+</div>
+<!-- 搴曢儴缁撴潫 -->
+<script>
+
+</script>
+</body>
+</html>

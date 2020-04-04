@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+
+<div th:replace="manage/common/header :: header"></div>
+<body>
+<div class="x-body">
+    <div class="layui-form-item">
+        <input type="hidden" id="id" th:value="${admin.id}">
+        <input type="hidden" id="version" th:value="${admin.version}">
+        <div class="layui-form-item">
+            <label for="L_repass" class="layui-form-label">
+                <span class="x-red">*</span>
+            </label>
+            <div class="layui-input-inline">
+                <input type="hidden" id="imgurl" name="avatar" lay-verify="avatar"
+                       th:value="${admin.avatar}" tocomplete="off" class="layui-input">
+                <button type="button" class="layui-btn layui-btn-normal" id="uoload"><i class="layui-icon">&#xe67c;</i>上传头像
+                </button>
+                <img class="layui-upload-img" id="clickimg" style="width: 113px; height: 90px;margin-top: 5px;"
+                     th:src="${admin.avatar}" onerror="this.src='/images/head.png'">
+                <p id="demoText"></p>
+            </div>
+        </div>
+
+        <label class="layui-form-label">
+            姓名
+        </label>
+        <div class="layui-input-inline">
+            <input type="text" th:value="${admin.realName}" id="realName" name="realName" class="layui-input">
+        </div>
+
+        <label class="layui-form-label">
+            账号
+        </label>
+        <div class="layui-input-inline">
+            <input type="text" readonly="readonly" th:value="${admin.userName}" class="layui-input">
+        </div>
+
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">
+            <span style="color:#009688">*</span>email
+        </label>
+        <div class="layui-input-inline">
+            <input id="email" name="email" type="text" th:value="${admin.email}" class="layui-input" maxlength="50">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">
+            <span style="color:red">*</span>手机号码
+        </label>
+        <div class="layui-input-inline">
+            <input id="phone" name="phone" type="text" th:value="${admin.phone}" class="layui-input" maxlength="11"
+                   required onkeyup="value=value.replace(/[^\d]/g,'')">
+        </div>
+    </div>
+
+</div>
+
+<div class="layui-form-item" align="center">
+    <button id="sub" class="layui-btn" style="background-color: #009688;" onclick="edit()">
+        确认修改
+    </button>
+</div>
+
+</div>
+<script type="text/javascript">
+
+    function edit() {
+        $sub = $("#sub");
+
+        $email = $("#email");
+        $phone = $("#phone");
+        $imgurl = $("#imgurl");
+        $id = $("#id");
+        $version = $("#version");
+        $realName = $("#realName");
+        var email = $email.val();
+        var phone = $phone.val();
+        var imgurl = $imgurl.val();
+        var id = $id.val();
+        var version = $version.val();
+        var realName = $realName.val();
+        //1.验证email格式
+        if (email !== undefined && email !== null && email !== '') {
+            if (!new RegExp("^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$|^1[3|4|5|7|8]\d{9}$").test(email)) {
+                errorMsg('email格式不正确');
+                return false;
+            }
+        }
+
+        if (phone.trim() == "") {
+            errorMsg('手机号码不能为空');
+            return false;
+        }
+        if (phone !== undefined && phone !== null && phone !== '') {
+            if (!new RegExp("^1[0-9]{10}$").test(phone)) {
+                errorMsg('手机格式不正确');
+                return false;
+            }
+        }
+
+        //2.保存修改
+        var url = "/manage/manage/update";
+        var param = {};
+        param = {
+            "id": id
+            , "email": email
+            , "phone": phone
+            , "avatar": imgurl
+            , "version": version
+            , "realName": realName
+        };
+        $.ajax({
+            type: 'post',
+            url: url,
+            data: param,
+            dataType: 'json',
+            async: false,
+            success: function (result) {
+                if (result.status == 1) {
+                    $sub.attr('disabled', "true");
+                    $sub.css('background-color', "#c9c9c9");
+                    sucessMsg(result.result);
+                    var deptid = window.parent.$(".currentDept").attr("id");
+                    var currentPage = window.parent.currentPage;
+                    top.location.reload();
+                } else {
+                    errorMsg(result.result);
+                }
+            },
+            fail: function (result) {
+                console.log(result)
+            }
+        })
+    }
+
+
+    /**信息提示框 */
+    function sucessMsg(msg) {
+
+
+        layui.use('layer', function () {
+            layer.msg(msg, {time: 1000, icon: 6}, function () {
+
+                // 获得frame索引
+                var index = parent.layer.getFrameIndex(window.name);
+                //关闭当前frame
+                parent.layer.close(index);
+            });
+        });
+    }
+
+    function errorMsg(msg) {
+        layui.use('layer', function () {
+            layer.msg(msg, {time: 1500, icon: 5});
+        });
+    }
+
+    layui.use('upload', function () {
+        var $ = layui.jquery
+            , upload = layui.upload;
+
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#uoload'
+            , url: '/common/uploadFile'
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    console.log(result);
+                    $('#clickimg').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                layer.msg("上传成功");
+                $("#imgurl").val(res.date.url);
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+
+    });
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="manage/common/header :: header"></div>
+<link rel="stylesheet" th:href="@{/css/role.css}"/>
+<body>
+<div class="layui-col-md10">
+    <div class="page-right-content layui-show" id="right01">
+        <h2><label th:text="${role.name}"></label></h2>
+        <input th:type="hidden" th:value="${role.id}" th:id="roleId">
+        <div class="layui-tab">
+            <div class="layui-tab-content">
+                <div class="layui-tab-item layui-show">
+                    <div class="layui-collapse" lay-accordion="">
+                        <th:block th:each="res : ${resources}">
+                            <div th:if="${res.type == 1}" class="layui-colla-item">
+                                <h2 class="layui-colla-title"><label th:text="${res.name}"></label></h2>
+                                <div class="layui-colla-content layui-form">
+                                    <th:block th:each="resources : ${resources}">
+                                        <!--th:disabled="${role.isBuiltIn == 0}"-->
+                                        <input th:if="${res.id} == ${resources.parentId} or ${res.id} == ${resources.id}" lay-filter="resources"
+                                               name="like1[ckxs]" th:value="${resources.id}" lay-skin="primary"
+                                               th:title="${resources.name}" type="checkbox"
+                                               th:checked="${resources.checked} ? 'true' : 'false'">
+                                    </th:block>
+                                </div>
+                            </div>
+                        </th:block>
+                    </div>
+                </div>
+                <!--<div class="layui-tab-item">-->
+                <!--内容2-->
+                <!--</div>-->
+                <!--<div class="layui-tab-item">-->
+                <!--内容3-->
+                <!--</div>-->
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form', 'layer'], function () {
+        $ = layui.jquery;
+        var form = layui.form
+            , layer = layui.layer;
+        form.on('checkbox(resources)', function (data) {
+            $.ajax({
+                url: "/manage/role/saveRoleResourcs",
+                type: "POST",
+                data: {
+                    roleId: $("#roleId").val(),
+                    resourcesId: data.value,
+                    isSave: data.elem.checked
+                },
+                success: function (data) {
+                    if (data.status == 200) {
+                        layer.msg(data.result, {time: 2000, icon: 1});
+                    } else {
+                        layer.msg(data.result, {time: 2000, icon: 5});
+                    }
+                }
+            })
+        });
+    });
+
+    function saveRoleResources(resourcesId) {
+
+    }
+</script>
+</body>
+</html>

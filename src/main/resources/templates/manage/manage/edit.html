@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="manage/common/header :: header"></div>
+
+<body>
+<div class="x-body">
+    <form th:id="form" class="layui-form layui-form-pane">
+        <input th:type="hidden" th:name="id" th:value="${admin.id}">
+        <input th:type="hidden" th:name="version" th:value="${admin.version}">
+        <div class="layui-form-item">
+            <label for="userName" class="layui-form-label">
+                <span class="x-red">*</span>用户名
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="userName" readonly th:name="userName" th:value="${admin.userName}"
+                       lay-verify="nikename" autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                将会成为您唯一的登入名
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="realName" class="layui-form-label">
+                <span class="x-red">*</span>真实姓名
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="realName" th:name="realName" th:value="${admin.realName}"
+                       lay-verify="required" autocomplete="off" class="layui-input" maxlength="6">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="phone" class="layui-form-label">
+                <span class="x-red">*</span>手机号
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="phone" th:name="phone" th:value="${admin.phone}" lay-verify="phone"
+                       autocomplete="off" class="layui-input" maxlength="11">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="email" class="layui-form-label">
+                <span class="x-red">*</span>所属角色
+            </label>
+            <div class="layui-input-inline" style="width: 50%">
+                <th:block th:each="role : ${roles}">
+                    <input lay-filter="resources" name="roles" th:value="${role.id}" lay-skin="primary"
+                           th:title="${role.name}" type="checkbox" th:checked="${role.checked} ? 'true' : 'false'">
+                </th:block>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="email" class="layui-form-label">
+                <span class="x-red">*</span>邮箱
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" id="email" name="email" required="" th:value="${admin.email}" lay-verify="email"
+                       autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><span class="x-red">*</span>是否启用</label>
+            <div class="layui-input-block">
+                <input th:type="checkbox" th:checked="${admin.isEnable == 0} ? 'true'" th:name="isEnable"
+                       th:lay-skin="switch" th:lay-filter="switchTest" lay-text="启用|禁用">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-submit="" lay-filter="edit">修改</button>
+        </div>
+    </form>
+</div>
+<script>
+    layui.use(['form', 'layer'], function () {
+        $ = layui.jquery;
+        var form = layui.form
+            , layer = layui.layer;
+
+        //自定义验证规则
+        form.verify({
+           /* nikename: function (value) {
+                if (value.length < 5) {
+                    return '昵称至少得5个字符啊';
+                }
+            }
+            , */pass: [/(.+){6,12}$/, '密码必须6到12位']
+            , repass: function (value) {
+                if ($('#password').val() != $('#repassword').val()) {
+                    return '两次密码不一致';
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(edit)', function (data) {
+            $("#form").find("button").prop("disabled", true);
+            var standards = "";
+            $("input:checkbox[name='roles']:checked").each(function() { // 遍历name=permissions
+                standards += ',' + $(this).val();
+            });
+            data.field.roles = standards;
+            if (standards == '') {
+                layer.msg("请选择角色", {time: 2000, icon: 10});
+                $("#form").find("button").prop("disabled", false);
+                return false;
+            }
+            if (data.field.isEnable == "on") {
+                data.field.isEnable = 0;
+            } else {
+                data.field.isEnable = 1;
+            }
+            params = data.field;
+            $.post("/manage/manage/update", params, function (data) {
+            	if (data.status == 200) {
+                    layer.msg(data.result, {time: 2000, icon: 1}, function () {
+                          // 父页面刷新
+                          parent.location.reload();
+                          // 获得frame索引
+                          var index = parent.layer.getFrameIndex(window.name);
+                          //关闭当前frame
+                          parent.layer.close(index);
+                      });
+                  } else {
+                  	layer.msg(data.result, {time: 2000, icon: 5});
+                      $("#submit").prop("disabled", false);
+                  }
+            });
+            return false;
+        });
+
+
+    });
+</script>
+</body>
+</html>

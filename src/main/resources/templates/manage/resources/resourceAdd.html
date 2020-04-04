@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="manage/common/header :: header"></div>
+
+
+<body>
+<div class="x-body">
+    <form class="layui-form layui-form-pane" id="cateForm" method="post" action="/manage/res/addsubord">
+        <input type="hidden" id="deptId" name="deptId" value="0">
+        <div class="layui-form-item">
+            <label for="userName" class="layui-form-label">
+                <span class="x-red">*</span>父目录
+            </label>
+            <div class="layui-input-inline">
+                <input disabled="disabled" type="text" th:value="${res.name}"
+                       onkeyup="this.value=this.value.replace(/\s+/g,'')" autocomplete="off" class="layui-input">
+            </div>
+            <input type="hidden" name="parentId" th:value="${res.id}">
+            <input type="hidden" name="type" th:value="${res.type}">
+        </div>
+        <div class="layui-form-item">
+            <label for="realName" class="layui-form-label">
+                <span class="x-red">*</span>新建目录名
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" onkeyup="this.value=this.value.replace(/\s+/g,'')" placeholder="请输入"
+                       id="cateName" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="phone" class="layui-form-label">
+                <span class="x-red">*</span>访问地址
+            </label>
+            <div class="layui-input-inline">
+                <input type="text" name="url" onkeyup="this.value=this.value.replace(/\s+/g,'')" placeholder="请输入"
+                       id="cateUrl" lay-verify="required" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否启用</label>
+            <div class="layui-input-block">
+                <input type="checkbox" checked="" name="enable" lay-skin="switch" lay-filter="switchTest"
+                       lay-text="启用|禁用">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <a class="layui-btn" id="add">增加</a>
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/javascript">
+
+
+    $(function () {
+        $("#add").click(function () {
+            if (!$("#cateName").val() || !$("#cateUrl").val()) {
+		    	layer.msg('请填写必填项', {time: 2000, icon:10});
+                return;
+            }
+            $("#cateForm").submit()
+            // 父页面刷新
+            //parent.location.reload();
+            parent.timeOut();
+            // 获得frame索引
+            var index = parent.layer.getFrameIndex(window.name);
+            //关闭当前frame
+            parent.layer.close(index);
+        })
+    })
+</script>
+</html>
