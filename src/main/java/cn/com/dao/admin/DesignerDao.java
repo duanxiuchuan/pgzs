@@ -14,5 +14,7 @@ public interface DesignerDao extends cn.com.dao.base.BaseDao<Designer> {
      * @Author Lidada
      * @Description：
      **/
-     PageQuery<Designer> findAll(PageQuery<Designer> query);
+     PageQuery<Designer> findPage(PageQuery<Designer> query);
+
+    void deleteByDesignerId(@Param("designerId")String designerId);
 }

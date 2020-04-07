@@ -16,4 +16,5 @@ public interface CaseDao extends cn.com.dao.base.BaseDao<Case> {
      **/
      PageQuery<Case> findPage(PageQuery<Case> query);
 
+    void deleteByCaseId(@Param("caseId") String caseId);
 }

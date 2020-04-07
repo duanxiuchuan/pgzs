@@ -18,4 +18,19 @@ public class CaseServiceImpl extends BaseServiceImpl<Case> implements CaseServic
         queryListAfter(ret.getList());
         return ret;
     }
+
+    @Override
+    public void add(Case cass) {
+        caseDao.insert(cass);
+    }
+
+    @Override
+    public void update(Case cass) {
+        caseDao.updateTemplateById(cass);
+    }
+
+    @Override
+    public void deleteByCaseId(String caseId) {
+        caseDao.deleteByCaseId(caseId);
+    }
 }

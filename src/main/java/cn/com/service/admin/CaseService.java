@@ -13,4 +13,10 @@ public interface CaseService extends BaseService<Case> {
      * @return
      */
     public PageQuery<Case> findPage(PageQuery<Case> query);
+
+    void add(Case cass);
+
+    void update(Case cass);
+
+    void deleteByCaseId(String caseId);
 }

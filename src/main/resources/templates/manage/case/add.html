@@ -14,19 +14,43 @@
     <div class="layui-form-item">
         <label class="layui-form-label">标题</label>
         <div class="layui-input-block">
-            <input type="text" class="layui-input" name="title" >
+            <input th:type="text" th:id="title" th:name="title" lay-verify="required" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">发布人</label>
+        <label class="layui-form-label">小区名称</label>
         <div class="layui-input-block">
-            <input type="text" class="layui-input" name="name" >
+            <input th:type="text" th:id="areasName" th:name="areasName" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">面积</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="area" th:name="area" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">户型</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="layout" th:name="layout" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">装修风格</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="style" th:name="style" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">设计师</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="designer" th:name="designer" lay-verify="required" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">内容</label>
         <div class="layui-input-block">
-            <textarea id="lay_edit" lay-verify="content" name = "text" ></textarea>
+            <textarea id="lay_edit" lay-verify="content" name = "detail" ></textarea>
         </div>
     </div>
     <div class="layui-form-item">
@@ -42,7 +66,7 @@
         var layedit = layui.layedit;
         layedit.set({	//设置图片接口
             uploadImage: {
-                url: 'layEdit/upload', //接口url
+                url: '/admin/common/richImg', //接口url
                 type: 'post'
             }
         });
@@ -59,9 +83,21 @@
         });
 
         form.on("submit(formSubmit)", function (data) {
-            console.log(data.field);
-            $.post("layEdit/save", data.field, function(result){
-                layer.msg(result.msg,{offset:'rb'});
+            params = data.field;
+            $.post("save", params, function (data) {
+                if (data.status == 200) {
+                    parent.layer.msg(data.result, {time: 2000, icon: 1}, function () {
+                        // 父页面刷新
+                        parent.location.reload();
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前frame
+                        parent.layer.close(index);
+                    });
+                } else {
+                    layer.msg(data.result, {time: 2000, icon: 5});
+                    $("#submit").prop("disabled", false);
+                }
             });
             return false;
         })

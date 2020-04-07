@@ -38,7 +38,7 @@ import java.util.*;
  * @author LiDaDa
  */
 @Controller
-@RequestMapping("/common")
+@RequestMapping("/admin/common")
 public class CommonController {
 	@Log
     private Logger log;

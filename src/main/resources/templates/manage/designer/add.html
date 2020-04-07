@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="manage/common/header :: header"></div>
+<style type="text/css">
+    #myForm{
+        background: white;
+        padding: 30px;
+    }
+</style>
+<body>
+
+<form id="myForm" method="post" class="layui-form white-bg radius">
+    <div class="layui-form-item">
+        <label class="layui-form-label">设计师名称</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="name" th:name="name" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">设计师类型</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="type" th:name="type" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">设计年限</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="years" th:name="years" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">毕业院校</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="education" th:name="education" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">设计风格</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="style" th:name="style" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">设计理念</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="idea" th:name="idea" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">代表作品</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="works" th:name="works" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">头像</label>
+        <div class="layui-input-block">
+            <input type="image" class="layui-nav-img" name="title" id="test2" src="" value="" />
+            <button type="button" class="layui-btn" id="test1">
+                <i class="layui-icon">&#xe67c;</i>上传头像
+            </button>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <button class="layui-btn" lay-submit="" lay-filter="add">增加</button>
+    </div>
+</form>
+
+<script>
+    layui.config({
+        base: '/definModule/'
+    }).use(['form', 'layer','dictSelect'], function () {
+        $ = layui.jquery;
+        var form = layui.form
+            , layer = layui.layer
+            , dictSelect = layui.dictSelect;
+
+        //自定义验证规则
+        form.verify({
+
+        });
+
+        //监听提交
+        form.on('submit(add)', function (data) {
+            $("#form").find("button").prop("disabled", true);
+            params = data.field;
+            $.post("save", params, function (data) {
+                if (data.status == 400) {
+                    layer.msg(data.result, {time: 2000, icon: 5});
+                    $("#submit").prop("disabled", false);
+                } else {
+                    layer.msg(data.result, {time: 2000, icon: 6}, function () {
+                        // 父页面刷新
+                        parent.location.reload();
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前frame
+                        parent.layer.close(index);
+                    });
+                }
+            });
+            return false;
+        });
+
+
+    });
+    layui.use('upload', function () {
+        var upload = layui.upload;
+
+        var uploadInst = upload.render({
+            elem: "#test1",
+            url: "/admin/common/richImg",
+            done: function (res)
+            {
+                console.log(res);
+                layui.$("#test2").attr('src', 'http://localhost' + res.data.src);
+                layui.$("#test2").attr('value','http://localhost'+ res.data.src);
+                alert('上传成功');
+            },
+            error: function ()
+            {
+
+            }
+        })
+    })
+</script>
+</body>
+</html>

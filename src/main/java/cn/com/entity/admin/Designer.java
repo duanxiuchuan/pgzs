@@ -40,6 +40,16 @@ public class Designer  extends BaseEntity<Designer> implements Serializable {
 	*/
 	private String works ;
 	private String years ;
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	private String title;
 	
 	public Designer() {
 	}
