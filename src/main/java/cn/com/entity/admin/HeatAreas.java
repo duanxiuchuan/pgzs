@@ -30,7 +30,25 @@ public class HeatAreas extends BaseEntity<HeatAreas> implements Serializable {
 	private String remark ;
 	private String status ;
 	private String title ;
-	
+	private String detail;
+	private String name;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDetail() {
+		return detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+
 	public HeatAreas() {
 	}
 

@@ -63,7 +63,7 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <button class="layui-btn" lay-submit="" lay-filter="add">增加</button>
+        <button class="layui-btn" lay-submit="" lay-filter="add">保存</button>
     </div>
 </form>
 
@@ -116,14 +116,27 @@
                 console.log(res);
                 layui.$("#test2").attr('src', 'http://localhost' + res.data.src);
                 layui.$("#test2").attr('value','http://localhost'+ res.data.src);
-                alert('上传成功');
+                layer.msg("上传成功", {time: 2000, icon: 6});
+
             },
             error: function ()
             {
 
             }
         })
-    })
+    });
+
+    // layer
+    $(function () {
+        $('#test2').on('click', function () {
+            layer.photos({
+                photos: '#photo-list',
+                shadeClose: false,
+                closeBtn: 2,
+                anim: 0
+            });
+        })
+    });
 </script>
 </body>
 </html>

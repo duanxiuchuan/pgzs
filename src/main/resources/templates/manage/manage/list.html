@@ -57,15 +57,13 @@
             , title: '用户数据表'
             , cols: [
                 [
-                    {type: 'checkbox', fixed: 'left'}
-                    , {field: 'userName', title: message('admin.admin.userName'), width: 120, fixed: 'left'}
-                    , {field: 'phone', title: message('admin.admin.phone'), width: 120, sort: true, fixed: 'left'}
-                    , {field: 'email', title: message('admin.admin.email'), width: 150}
-
-                    , {field: 'realName', title: message('admin.admin.realName'), width: 100}
-                    , {field: 'genderText', title: message('admin.admin.gender'), width: 120}
+                    {type: 'checkbox'}
+                    , {field: 'userName', title: message('admin.admin.userName')}
+                    , {field: 'phone', title: message('admin.admin.phone')}
+                    , {field: 'email', title: message('admin.admin.email')}
+                    , {field: 'realName', title: message('admin.admin.realName')}
                     , {
-                    field: 'isEnable', title: message('admin.admin.isEnable'), width: 120, templet: function (res) {
+                    field: 'isEnable', title: message('admin.admin.isEnable'), templet: function (res) {
                         if (res.isEnable == 0) {
                             return '<input type="checkbox" name="switch"  lay-text=' + message("admin.admin.openOrStop") + ' checked disabled lay-skin="switch">';
                         } else {
@@ -73,11 +71,7 @@
                         }
                     }
                 }
-                    , {field: 'deptName', title: message('admin.admin.deptId'), width: 100, sort: true}
-                    , {field: 'createDate', title: message('admin.common.createDate'), width: 160, sort: true}
-                    , {field: 'createName', title: message('admin.common.creator'), width: 100}
-                    , {field: 'modifyDate', title: message('admin.common.modifyDate'), width: 160, sort: true}
-                    , {field: 'modifyName', title: message('admin.common.modifier'), width: 100}
+                    , {field: 'deptName', title: message('admin.admin.deptId')}
                     , {fixed: 'right', title: message('admin.common.action'), toolbar: '#barDemo', width: 200}
                 ]
             ]

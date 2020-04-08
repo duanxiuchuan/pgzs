@@ -27,7 +27,7 @@
             <i class="layui-icon"></i>
             <th:block th:text="#{admin.common.batchDelete}"></th:block>
         </button>
-        <button class="layui-btn layui-btn-sm" onclick="add()">
+        <button shiro:hasPermission="/manage/case/add" class="layui-btn layui-btn-sm" onclick="add()">
             <i class="layui-icon"></i>
             <label th:text="#{admin.common.addCase}"></label>
         </button>
@@ -60,10 +60,10 @@
             , cols: [
                 [
 
-                    {type: 'checkbox', fixed: 'left'}
-                    , {field: 'id', title: 'ID', width:80,  fixed: 'left',type:"numbers"}
+                    {type: 'checkbox'}
+                    , {field: 'id', title: 'ID', width:80, type:"numbers"}
                     , {field: 'caseId', title: "caseId"}
-                    , {field: 'title', title: "标题",  fixed: 'left'}
+                    , {field: 'title', title: "标题"}
                     , {field: 'areasName', title: "小区名称"}
                     , {field: 'area', title: "面积"}
                     , {field: 'layout', title: "户型"}

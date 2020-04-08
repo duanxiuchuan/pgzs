@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="manage/common/header :: header"></div>
+<style type="text/css">
+    #myForm{
+        background: white;
+        padding: 30px;
+    }
+</style>
+<body>
+
+<form id="myForm" method="post" class="layui-form white-bg radius">
+    <div class="layui-form-item">
+        <label class="layui-form-label">标题</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="title" th:name="title" th:value="${wiki.title}" lay-verify="required" autocomplete="off" class="layui-input">
+            <input type="hidden" th:name="wikiId" th:value="${wiki.wikiId}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">来源</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="source" th:name="source" th:value="${wiki.source}" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">类型</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="type" th:name="type" th:value="${wiki.type}" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">点击数</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="clicks" th:name="clicks" th:value="${wiki.clicks}" lay-verify="required" autocomplete="off" class="layui-input">
+            <input type="hidden" id="detils" th:value="${wiki.detail}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">详情</label>
+        <div class="layui-input-block">
+            <textarea id="lay_edit" lay-verify="content" name = "detail" ></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" lay-submit="" class="layui-btn layui-btn-radius layui-btn-normal" style="width: 150px" lay-filter="formSubmit" >保存</button>
+        </div>
+    </div>
+</form>
+
+<script>
+    layui.use(['layedit', 'form'], function(){
+        var form = layui.form;
+        var layedit = layui.layedit;
+
+        layedit.set({	//设置图片接口
+            uploadImage: {
+                url: '/admin/common/richImg', //接口url
+                type: 'post'
+            }
+        });
+        //创建一个编辑器
+        var index = layedit.build('lay_edit',{
+            height: 350
+        });
+        //赋值给富文本
+        var details = $("#detils").val();
+        layedit.setContent(index,details);
+
+        //提交时把值同步到文本域中
+        form.verify({
+            //content富文本域中的lay-verify值
+            content: function(value) {
+                return layedit.sync(index);
+            }
+        });
+
+        form.on("submit(formSubmit)", function (data) {
+            params = data.field;
+            $.post("/manage/wiki/update", params, function (data) {
+                if (data.status == 200) {
+                    parent.layer.msg(data.result, {time: 2000, icon: 1}, function () {
+                        // 父页面刷新
+                        parent.location.reload();
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前frame
+                        parent.layer.close(index);
+                    });
+                } else {
+                    layer.msg(data.result, {time: 2000, icon: 5});
+                    $("#submit").prop("disabled", false);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+</body>
+</html>

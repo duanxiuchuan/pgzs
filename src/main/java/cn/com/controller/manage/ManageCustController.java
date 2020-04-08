@@ -4,7 +4,11 @@ import cn.com.common.message.JsonResult;
 import cn.com.common.result.ResultMap;
 import cn.com.controller.manage.base.BaseController;
 import cn.com.entity.admin.*;
+import cn.com.entity.base.Dict;
 import cn.com.service.admin.CustService;
+import cn.com.service.admin.DesignerService;
+import cn.com.service.admin.DictService;
+import cn.com.service.admin.HeatAreasService;
 import cn.com.utils.StringUtils;
 import cn.com.utils.UUIDUtil;
 import jnr.ffi.Struct;
@@ -32,6 +36,15 @@ public class ManageCustController extends BaseController {
     @Autowired
     private CustService custService;
 
+    @Autowired
+    private DictService dictService;
+
+    @Autowired
+    private DesignerService designerService;
+
+    @Autowired
+    private HeatAreasService heatAreasService;
+
     @RequestMapping("list")
     public String list() {
 
@@ -58,7 +71,22 @@ public class ManageCustController extends BaseController {
     }
 
     @RequestMapping("addPage")
-    public String addPage() {
+    public String addPage(HttpServletRequest request) {
+        //查询所有地区
+       List<Dict> aerasList = dictService.findByType("地区");
+        //查询所有设计师
+        List<Designer> designerList = designerService.findAll();
+        //查询所有小区
+        List<HeatAreas> heatAreasList = heatAreasService.findAll();
+        //查询所有户型
+        List<Dict> layoutList = dictService.findByType("户型");
+        //预约类型
+        List<Dict> typeList = dictService.findByType("预约类型");
+        request.setAttribute("aerasList",aerasList);
+        request.setAttribute("designerList",designerList);
+        request.setAttribute("heatAreasList",heatAreasList);
+        request.setAttribute("layoutList",layoutList);
+        request.setAttribute("typeList",typeList);
 
         return "manage/cust/add";
     }

@@ -7,9 +7,9 @@
 <div class="x-body">
     <div class="layui-row">
         <div class="layui-form layui-col-md12 x-so">
-            <input type="text" id="userName" name="userName" placeholder="请输入用户名" autocomplete="off"
+            <input type="text" id="typeName" name="typeName" placeholder="字典类型" autocomplete="off"
                    class="layui-input">
-            <input type="text" id="phone" name="phone" placeholder="请输入手机号" autocomplete="off" class="layui-input">
+            <input type="text" id="name" name="name" placeholder="字典名称" autocomplete="off" class="layui-input">
             <input type="hidden" id="deptId" name="deptId" th:value="${deptId}">
             <button class="layui-btn" data-type="reload"><i class="layui-icon">&#xe615;</i></button>
         </div>
@@ -26,9 +26,9 @@
             <i class="layui-icon"></i>
             <th:block th:text="#{admin.common.batchDelete}"></th:block>
         </button>
-        <button shiro:hasPermission="/manage/dict/addPage" class="layui-btn layui-btn-sm" onclick="add()">
+        <button shiro:hasPermission="/manage/dict/add" class="layui-btn layui-btn-sm" onclick="add()">
             <i class="layui-icon"></i>
-            <label th:text="#{admin.common.add}"></label>
+            <label th:text="#{admin.common.addDict}"></label>
         </button>
         <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);">
             <i class="layui-icon">&#xe666;</th:block></i></a>
@@ -36,40 +36,46 @@
 </script>
 
 <script type="text/html" id="barDemo">
-    <a shiro:hasPermission="/manage/dict/editPage" class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a shiro:hasPermission="/manage/dict/delete" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="view">查看</a>
+    <a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="del">删除</a>
+    <a class="layui-btn layui-btn-xs" lay-event="view">查看</a>
 </script>
 
 <script>
 
     function add() {
-        x_admin_show('添加用户', 'addPage');
+        x_admin_show('添加字典', 'addPage');
     }
 
     layui.use('table', function () {
         var table = layui.table;
         table.render({
             elem: '#tableData'
-            , url: 'w'
+            , url: 'listData'
             , toolbar: '#toolbarDemo'
             , title: '用户数据表'
             , cols: [
                 [
 
-                    {type: 'checkbox', fixed: 'left'}
-                    , {field: 'name', title: "[[#{admin.dict.name}]]", sort: true, fixed: 'left'}
-                    , {field: 'type', title: "[[#{admin.dict.value}]]", sort: true, fixed: 'left'}
-                    , {field: 'typeName', title: "[[#{admin.dict.type}]]", sort: true,}
-                    , {field: 'value', title: "[[#{admin.dict.typeName}]]", width: 150}
-                    , {field: 'sort', title: "[[#{admin.dict.sort}]]", width: 100, sort: true}
-                    , {field: 'createDate', title: "[[#{admin.common.createDate}]]", width: 160, sort: true}
-                    , {field: 'createName', title: "[[#{admin.common.creator}]]", width: 100}
-                    , {field: 'modifyDate', title: "[[#{admin.common.modifyDate}]]", width: 160, sort: true}
-                    , {field: 'modifyName', title: "[[#{admin.common.modifier}]]", width: 100}
+                    {type: 'checkbox'}
+                    , {field: 'id', title: 'ID', width:80, type:"numbers"}
+                    , {field: 'dictId', title: "字典ID" }
+                    , {field: 'typeName', title: "字典类型" }
+                    , {field: 'name', title: "字典名称"}
+                    , {field: 'value', title: "字典值"}
+                    , {field: 'delFlag', title: "是否有效",templet: function (res){
+                        if (res.delFlag == 1){
+                            return "有效";
+                        }else{
+                            return "无效";
+                        }
+                }}
                     , {fixed: 'right', title: "[[#{admin.common.action}]]", toolbar: '#barDemo', width: 200}
                 ]
             ]
+            ,done: function () {
+                $("[data-field='dictId']").css('display','none');
+            }
             , page: true
 
         });
@@ -79,8 +85,8 @@
                 table.reload('tableData', {
                     where: {
                         deptId: $("#deptId").val(),
-                        userName: $("#userName").val(),
-                        phone: $("#phone").val()
+                        typeName: $("#typeName").val(),
+                        name: $("#name").val()
                     }
                 });
             }
@@ -119,7 +125,7 @@
                     $.ajax({
                         url: 'delete',
                         type: 'POST',
-                        data: {id: data.id},
+                        data: {dictId: data.dictId},
                         success: function (data) {
                             if (data.status == 0) {
                                 layer.msg(data.result, {icon: 2, time: 1000});
@@ -132,9 +138,9 @@
 
                 });
             } else if (obj.event === 'edit') {
-                x_admin_edit('编辑', 'editPage', '', '', data.id);
+                x_admin_edit('编辑', 'editPage', '', '', data.dictId);
             } else if (obj.event === 'view') {
-                x_admin_edit('编辑', 'view', '', '', data.id);
+                x_admin_edit('编辑', 'view', '', '', data.dictId);
             }
         });
     });

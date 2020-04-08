@@ -14,5 +14,7 @@ public interface StyleDao extends cn.com.dao.base.BaseDao<Style> {
      * @Author Lidada
      * @Description：
      **/
-     PageQuery<Style> findAll(PageQuery<Style> query);
+     PageQuery<Style> findPage(PageQuery<Style> query);
+
+    void deleteByStyleId(@Param("styleId") String styleId);
 }

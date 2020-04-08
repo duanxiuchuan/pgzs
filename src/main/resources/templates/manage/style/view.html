@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="manage/common/header :: header"></div>
+<style type="text/css">
+    #myForm{
+        background: white;
+        padding: 30px;
+    }
+</style>
+<body>
+
+<form id="myForm" method="post" class="layui-form white-bg radius">
+    <div class="layui-form-item">
+        <label class="layui-form-label">标题</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="title" th:name="title" th:value="${style.title}" lay-verify="required" autocomplete="off" class="layui-input">
+            <input type="hidden" th:name="areasId" th:value="${style.styleId}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">空间</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="space" th:name="space" th:value="${style.space}" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">风格</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="style" th:name="style" th:value="${style.style}" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">功能</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="fuca" th:name="fuca" th:value="${style.fuca}" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+            <input th:type="text" th:id="remark" th:name="remark" th:value="${style.remark}" lay-verify="required" autocomplete="off" class="layui-input">
+            <input type="hidden" id="detils" th:value="${style.detail}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">详情</label>
+        <div class="layui-input-block">
+            <textarea id="lay_edit" lay-verify="content" name = "detail" ></textarea>
+        </div>
+    </div>
+</form>
+
+<script>
+    layui.use(['layedit', 'form'], function(){
+        var form = layui.form;
+        var layedit = layui.layedit;
+
+        layedit.set({	//设置图片接口
+            uploadImage: {
+                url: '/admin/common/richImg', //接口url
+                type: 'post'
+            }
+        });
+        //创建一个编辑器
+        var index = layedit.build('lay_edit',{
+            height: 350
+        });
+        //赋值给富文本
+        var details = $("#detils").val();
+        layedit.setContent(index,details);
+
+        //提交时把值同步到文本域中
+        form.verify({
+            //content富文本域中的lay-verify值
+            content: function(value) {
+                return layedit.sync(index);
+            }
+        });
+
+        form.on("submit(formSubmit)", function (data) {
+            params = data.field;
+            $.post("/manage/case/update", params, function (data) {
+                if (data.status == 200) {
+                    parent.layer.msg(data.result, {time: 2000, icon: 1}, function () {
+                        // 父页面刷新
+                        parent.location.reload();
+                        // 获得frame索引
+                        var index = parent.layer.getFrameIndex(window.name);
+                        //关闭当前frame
+                        parent.layer.close(index);
+                    });
+                } else {
+                    layer.msg(data.result, {time: 2000, icon: 5});
+                    $("#submit").prop("disabled", false);
+                }
+            });
+            return false;
+        })
+    });
+</script>
+</body>
+</html>

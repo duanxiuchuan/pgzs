@@ -4,11 +4,11 @@ findAll
 
     select 
     @pageTag(){
-        a1.real_name createName, a2.real_name modifyName, d.* 
+        d.* 
     @}
-    from sys_dict d, sys_admin a1, sys_admin a2
-    where d.creator = a1.id
-    and d.modifier = a2.id
+    from sys_dict d
+    where 1=1
+    and d.del_flag = 1
     
 findDictByName
 ===
@@ -21,4 +21,10 @@ findByType
 ===
 * 通过类型查询
        
-    select * from sys_dict where type = #type#
+    select * from sys_dict where type_name = #type#
+    
+    
+deleteByDictId
+===
+* 逻辑删除
+update sys_dict set del_flag = 0 where del_flag =1 and dict_id = #dictId#

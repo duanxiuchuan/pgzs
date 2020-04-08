@@ -1,6 +1,7 @@
 package cn.com.controller.manage.base;
 
 import cn.com.annotation.Log;
+import cn.com.common.message.JsonResult;
 import cn.com.common.result.ResultMap;
 import cn.com.entity.admin.Admin;
 import cn.com.entity.base.Dict;
@@ -9,6 +10,7 @@ import org.beetl.sql.core.engine.PageQuery;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -84,12 +86,52 @@ public class DictController extends BaseController {
         }
     }
 
+    /**
+     * 查看界面
+     *
+     * @param request
+     * @param dictId
+     * @return
+     */
+    @RequestMapping("/view/{dictId}")
+    public String view(HttpServletRequest request, @PathVariable("dictId") String dictId) {
+        Dict dict = dictService.findById(dictId);
+        request.setAttribute("dict",dict);
+        return "manage/dict/view";
+    }
+
+    /**
+     * 修改界面
+     *
+     * @param request
+     * @param dictId
+     * @return
+     */
+    @RequestMapping("/editPage/{dictId}")
+    public String editPage(HttpServletRequest request, @PathVariable("dictId") String dictId) {
+        Dict dict = dictService.findById(dictId);
+        request.setAttribute("dict",dict);
+        return "manage/dict/edit";
+    }
+
+    @RequestMapping("update")
+    @ResponseBody
+    public JsonResult update(HttpServletRequest request, Dict dict) {
+        try {
+            dictService.update(dict);
+            return JsonResult.success("修改成功", null);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+            return JsonResult.error("系统异常", null);
+        }
+    }
+
     @RequestMapping("/delete")
     @ResponseBody
-    public Map<String, Object> delete(HttpServletRequest request) {
+    public Map<String, Object> delete(HttpServletRequest request,Dict dict) {
         try {
-            String id = request.getParameter("id");
-            int flag = dictService.deleteById(id);
+            int flag = dictService.deleteByDictId(dict.getDictId());
             if (flag > 0) {
                 return super.messageResult(i18nMessage.getMessage("admin.common.deleteSuccess"), true);
             } else {

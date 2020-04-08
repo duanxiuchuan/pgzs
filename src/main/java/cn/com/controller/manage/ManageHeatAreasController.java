@@ -6,8 +6,10 @@ import cn.com.controller.manage.base.BaseController;
 import cn.com.entity.admin.Admin;
 import cn.com.entity.admin.Case;
 import cn.com.entity.admin.Designer;
+import cn.com.entity.admin.HeatAreas;
 import cn.com.service.admin.CaseService;
 import cn.com.service.admin.DesignerService;
+import cn.com.service.admin.HeatAreasService;
 import cn.com.utils.StringUtils;
 import cn.com.utils.UUIDUtil;
 import org.beetl.sql.core.engine.PageQuery;
@@ -24,35 +26,35 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Controller
-@RequestMapping("/manage/design")
-public class ManageDesignController extends BaseController {
+@RequestMapping("/manage/heat")
+public class ManageHeatAreasController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(ManageCaseController.class);
 
     @Autowired
-    private DesignerService designerService;
+    private HeatAreasService heatAreasService;
 
     @RequestMapping("list")
     public String list() {
 
-        return "manage/designer/list";
+        return "manage/heat/list";
     }
 
     @RequestMapping("listData")
     @ResponseBody
-    public ResultMap<Designer> listData(HttpServletRequest request,
-                                    @RequestParam(name = "page", required = false, defaultValue = "1") int page,
-                                    @RequestParam(name = "limit", required = false, defaultValue = "10") int limit,
-                                    Designer designer) {
+    public ResultMap<HeatAreas> listData(HttpServletRequest request,
+                                         @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                                         @RequestParam(name = "limit", required = false, defaultValue = "10") int limit,
+                                         HeatAreas heatAreas) {
 
-        PageQuery<Designer> query = new PageQuery<>(page, limit);
-        if (StringUtils.isNotEmpty(designer.getName())) {
-            query.setPara("name",designer.getName());
+        PageQuery<HeatAreas> query = new PageQuery<>(page, limit);
+        if (StringUtils.isNotEmpty(heatAreas.getTitle())) {
+            query.setPara("title",heatAreas.getTitle());
         }
-        if (StringUtils.isNotEmpty(designer.getType())) {
-            query.setPara("type", designer.getType());
+        if (StringUtils.isNotEmpty(heatAreas.getName())) {
+            query.setPara("name",heatAreas.getName());
         }
-        query = designerService.findPage(query);
-        ResultMap<Designer> resultMap = new ResultMap<>(query.getList(), query.getTotalRow());
+        query = heatAreasService.findPage(query);
+        ResultMap<HeatAreas> resultMap = new ResultMap<>(query.getList(), query.getTotalRow());
         return resultMap;
     }
 
@@ -60,16 +62,16 @@ public class ManageDesignController extends BaseController {
     public String addPage() {
         //查询所有设计师
 
-        return "manage/designer/add";
+        return "manage/heat/add";
     }
 
     @RequestMapping("save")
     @ResponseBody
-    public JsonResult save(HttpServletRequest request, Designer designer) {
+    public JsonResult save(HttpServletRequest request, HeatAreas heatAreas) {
         try {
-            designer.setDesignerId(UUIDUtil.uuid());
-            designer.setStatus("1");
-            designerService.add(designer);
+            heatAreas.setAreasId(UUIDUtil.uuid());
+            heatAreas.setStatus("1");
+            heatAreasService.add(heatAreas);
             return JsonResult.success("保存成功", null);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -82,35 +84,35 @@ public class ManageDesignController extends BaseController {
      * 查看界面
      *
      * @param request
-     * @param designerId
+     * @param areasId
      * @return
      */
-    @RequestMapping("/view/{designerId}")
-    public String view(HttpServletRequest request, @PathVariable("designerId") String designerId) {
-        Designer designer = designerService.findById(designerId);
-        request.setAttribute("designer",designer);
-        return "manage/designer/view";
+    @RequestMapping("/view/{areasId}")
+    public String view(HttpServletRequest request, @PathVariable("areasId") String areasId) {
+        HeatAreas heatAreas = heatAreasService.findById(areasId);
+        request.setAttribute("heat",heatAreas);
+        return "manage/heat/view";
     }
 
     /**
      * 修改界面
      *
      * @param request
-     * @param designerId
+     * @param areasId
      * @return
      */
-    @RequestMapping("/editPage/{designerId}")
-    public String editPage(HttpServletRequest request, @PathVariable("designerId") String designerId) {
-        Designer designer= designerService.findById(designerId);
-        request.setAttribute("designer",designer);
-        return "manage/designer/edit";
+    @RequestMapping("/editPage/{areasId}")
+    public String editPage(HttpServletRequest request, @PathVariable("areasId") String areasId) {
+        HeatAreas heatAreas = heatAreasService.findById(areasId);
+        request.setAttribute("heat",heatAreas);
+        return "manage/heat/edit";
     }
 
     @RequestMapping("update")
     @ResponseBody
-    public JsonResult update(HttpServletRequest request, Designer designer) {
+    public JsonResult update(HttpServletRequest request, HeatAreas heatAreas) {
         try {
-            designerService.update(designer);
+            heatAreasService.update(heatAreas);
             return JsonResult.success("修改成功", null);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -121,9 +123,9 @@ public class ManageDesignController extends BaseController {
 
     @RequestMapping("delete")
     @ResponseBody
-    public JsonResult delete(HttpServletRequest request, Designer designer) {
+    public JsonResult delete(HttpServletRequest request, HeatAreas heatAreas) {
         try {
-            designerService.deleteByDesignerId(designer.getDesignerId());
+            heatAreasService.deleteByAreasId(heatAreas.getAreasId());
             return JsonResult.success("删除成功", null);
         } catch (Exception e) {
             logger.error(e.getMessage());

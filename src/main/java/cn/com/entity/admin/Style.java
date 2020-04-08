@@ -27,11 +27,29 @@ public class Style extends BaseEntity<Style> implements Serializable {
 	@Column(length = 32)
 	private String styleId ;
 	private String detail ;
-	private String fucation ;
+	private String fuca ;
 	private String space ;
 	private String status ;
 	private String style ;
-	
+	private String title;
+	private String remark;
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
 	public Style() {
 	}
 
@@ -50,14 +68,15 @@ public class Style extends BaseEntity<Style> implements Serializable {
 	public void setDetail(String detail ){
 		this.detail = detail;
 	}
-	
-	public String getFucation(){
-		return  fucation;
+
+	public String getFuca() {
+		return fuca;
 	}
-	public void setFucation(String fucation ){
-		this.fucation = fucation;
+
+	public void setFuca(String fuca) {
+		this.fuca = fuca;
 	}
-	
+
 	public String getSpace(){
 		return  space;
 	}

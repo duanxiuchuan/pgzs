@@ -14,5 +14,7 @@ public interface HeatAreasDao extends cn.com.dao.base.BaseDao<HeatAreas> {
      * @Author Lidada
      * @Description：
      **/
-     PageQuery<HeatAreas> findAll(PageQuery<HeatAreas> query);
+     PageQuery<HeatAreas> findPage(PageQuery<HeatAreas> query);
+
+    void deleteByAreasId(@Param("areasId") String areasId);
 }

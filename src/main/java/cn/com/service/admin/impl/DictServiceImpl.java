@@ -32,7 +32,7 @@ public class DictServiceImpl extends BaseServiceImpl<Dict> implements DictServic
     public Dict findCoreDict(String type, String value) {
         List<Dict> list;
         String dictList =  redisService.get(type);
-        if (StringUtils.isNotEmpty(dictList)) {
+        if (StringUtils.isNotEmpty(dictList) && !"null".equals(dictList)) {
             list = JsonListUtil.jsonToList(dictList, Dict.class);
         } else {
             list = dictDao.findByType(type);
@@ -59,5 +59,21 @@ public class DictServiceImpl extends BaseServiceImpl<Dict> implements DictServic
         Query<Dict> query = sqlManager.query(Dict.class);
         List<Dict> list = query.andEq("type", type).select();
         return list;
+    }
+
+    @Override
+    public void update(Dict dict) {
+        dictDao.updateTemplateById(dict);
+    }
+
+    @Override
+    public int deleteByDictId(Long dictId) {
+        return dictDao.deleteByDictId(dictId);
+    }
+
+    @Override
+    public List<Dict> findByType(String type) {
+         List<Dict> dictList = dictDao.findByType(type);
+         return dictList;
     }
 }

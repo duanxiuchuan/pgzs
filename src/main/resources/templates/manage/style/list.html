@@ -4,21 +4,14 @@
 
 <div th:replace="manage/common/header :: header"></div>
 <link rel="stylesheet" th:href="@{/css/role.css}" />
-<style>
-    .layui-table-cell{
-        height:auto!important;
-        white-space: normal;
-    }
-    .layui-table-view
-    .layui-table {width:100%}
-</style>
+
 <body>
 <div class="x-body">
     <div class="layui-row">
         <div class="layui-form layui-col-md12 x-so">
-            <input type="text" id="name" name="name" placeholder="设计师名称" autocomplete="off"
-                   class="layui-input">
-            <input type="text" id="type" name="type" placeholder="设计师类型" autocomplete="off" class="layui-input">
+            <input type="text" id="title" name="title" placeholder="标题" autocomplete="off" class="layui-input">
+            <input type="text" id="style" name="style" placeholder="风格" autocomplete="off" class="layui-input">
+            <input type="text" id="space" name="space" placeholder="空间" autocomplete="off" class="layui-input">
             <button class="layui-btn" data-type="reload"><i class="layui-icon">&#xe615;</i></button>
         </div>
     </div>
@@ -34,9 +27,9 @@
             <i class="layui-icon"></i>
             <th:block th:text="#{admin.common.batchDelete}"></th:block>
         </button>
-        <button shiro:hasPermission="/manage/design/add" class="layui-btn layui-btn-sm" onclick="add()">
+        <button shiro:hasPermission="/manage/style/add" class="layui-btn layui-btn-sm" onclick="add()">
             <i class="layui-icon"></i>
-            <label th:text="#{admin.common.addDesigner}"></label>
+            <label th:text="#{admin.common.addStyle}"></label>
         </button>
         <a class="layui-btn layui-btn-sm" href="javascript:location.replace(location.href);">
             <i class="layui-icon">&#xe666;</th:block></i></a>
@@ -49,14 +42,11 @@
     <a class="layui-btn layui-btn-xs" lay-event="view">查看</a>
 </script>
 
-<script type="text/html" id="imgTpl">
-    <img src="{{ d.title }}">
-</script>
 
 <script>
 
     function add() {
-        x_admin_show('添加设计师', 'addPage');
+        x_admin_show('添加小区', 'addPage');
     }
 
     layui.use('table', function () {
@@ -71,50 +61,30 @@
                 [
 
                     {type: 'checkbox'}
-                    , {field: 'id', title: 'ID',type:"numbers"}
-                    , {field: 'designerId', title: "designerId"}
-                    , {field: 'title', title: "头像",templet:'#imgTpl'}
-                    , {field: 'name', title: "名称"}
-                    , {field: 'type', title: "设计师类型"}
-                    , {field: 'years', title: "设计年限"}
-                    , {field: 'education', title: "毕业院校"}
-                    , {field: 'style', title: "设计风格"}
-                    , {field: 'idea', title: "设计理念"}
-                    , {field: 'works', title: "代表作品"}
+                    , {field: 'id', title: 'ID', width:80,type:"numbers"}
+                    , {field: 'styleId', title: "styleId"}
+                    , {field: 'title', title: "标题"}
+                    , {field: 'space', title: "空间"}
+                    , {field: 'style', title: "风格"}
+                    , {field: 'fuca', title: "功能"}
+                    , {field: 'remark', title: "描述"}
                     , {fixed: 'right', title: "[[#{admin.common.action}]]", toolbar: '#barDemo', width: 200}
 
                 ]
              ]
             ,done: function () {
-                hoverOpenImg();//显示大图
-                $("[data-field='designerId']").css('display','none');
+                $("[data-field='styleId']").css('display','none');
             }
             , page: true
 
         });
-        function hoverOpenImg(){
-            var img_show = null; // tips提示
-            $('td img').hover(function(){
-                //alert($(this).attr('src'));
-                var img = "<img class='img_msg' src='"+$(this).attr('src')+"' style='width:130px;' />";
-                img_show = layer.tips(img, this,{
-                    tips:[2, 'rgba(41,41,41,.5)']
-                    ,area: ['160px']
-                });
-            },function(){
-                layer.close(img_show);
-            });
-            $('td img').attr('style','max-width:70px');
-        };
-
         var $ = layui.$, active = {
             reload: function () {
-                var name = $("#name").val();
-                console.log(name)
                 table.reload('tableData', {
                     where: {
-                        name: $("#name").val(),
-                        type: $("#type").val()
+                        style: $("#style").val(),
+                        title: $("#title").val(),
+                        space: $("#space").val()
                     }
                 });
             }
@@ -153,7 +123,7 @@
                     $.ajax({
                         url: 'delete',
                         type: 'POST',
-                        data: {designerId: data.designerId},
+                        data: {styleId: data.styleId},
                         success: function (data) {
                             if (data.status == 0) {
                                 layer.msg(data.result, {icon: 2, time: 1000});
@@ -166,9 +136,9 @@
 
                 });
             } else if (obj.event === 'edit') {
-                x_admin_edit('编辑', 'editPage', '', '', data.designerId);
+                x_admin_edit('编辑', 'editPage', '', '', data.styleId);
             } else if (obj.event === 'view') {
-                x_admin_edit('详情', 'view', '', '', data.designerId);
+                x_admin_edit('详情', 'view', '', '', data.styleId);
             }
         });
     });

@@ -42,4 +42,10 @@ public interface DictService extends BaseService<Dict> {
      * @return
      */
     List<Dict> findByDicType(String type);
+
+    void update(Dict dict);
+
+    int deleteByDictId(Long dictId);
+
+    List<Dict> findByType(String type);
 }

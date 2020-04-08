@@ -32,9 +32,18 @@ public class Wiki extends BaseEntity<Wiki> implements Serializable {
 	private String clicks ;
 	private String source ;
 	private String status ;
-	private String titel ;
+	private String title ;
 	private String type ;
-	
+	private String detail;
+
+	public String getDetail() {
+		return detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+
 	public Wiki() {
 	}
 
@@ -76,11 +85,11 @@ public class Wiki extends BaseEntity<Wiki> implements Serializable {
 		this.status = status;
 	}
 	
-	public String getTitel(){
-		return  titel;
+	public String getTitle(){
+		return  title;
 	}
-	public void setTitel(String titel ){
-		this.titel = titel;
+	public void setTitle(String title ){
+		this.title = title;
 	}
 	
 	public String getType(){

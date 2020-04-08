@@ -22,19 +22,14 @@ import java.io.Serializable;
 public class Dict extends BaseEntity<Dict> implements Serializable {
     @Id
     @GeneratedValue
-    private Long id;
+    private Long dictId;
     private String name;
     private String value;
-    private String type;
     private String typeName;
-    private Integer sort;
     private Integer delFlag;
     private String remark;
 
-    @Transient
-    private String createName;
-    @Transient
-    private String modifyName;
+
 
 
 }

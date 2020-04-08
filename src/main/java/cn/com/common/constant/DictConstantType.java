@@ -8,11 +8,13 @@ package cn.com.common.constant;
 public class DictConstantType {
     /** 性别 */
     public static final String ADMIN_GENDER_TYPE = "admin_gender_type";
-    /** 素材类型 **/
-    public static final String BUSI_FODDER_TYPE = "busi_fodder_type";
-    /** 商品审核状态 **/
-    public static final String BUSI_PRODUCT_CHECK_STATE = "busi_product_check_state";
-    /** 代理类型 **/
-    public static final String BUSI_AGENT_TYPE = "busi_agent_type";
+    /** 户型 */
+    public static final String ADMIN_LAYOUT_TYPE = "admin_layout_type";
+    /** 地区 */
+    public static final String ADMIN_AREAS_TYPE = "admin_areas_type";
+    /** 预约类型 */
+    public static final String ADMIN_TYPE_TYPE = "admin_type_type";
+
+
 
 }

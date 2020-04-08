@@ -14,5 +14,7 @@ public interface WikiDao extends cn.com.dao.base.BaseDao<Wiki> {
      * @Author Lidada
      * @Description：
      **/
-     PageQuery<Wiki> findAll(PageQuery<Wiki> query);
+     PageQuery<Wiki> findPage(PageQuery<Wiki> query);
+
+    void deleteByWikiId(@Param("wikiId") String wikiId);
 }

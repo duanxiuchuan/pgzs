@@ -4,7 +4,10 @@ import java.math.*;
 import java.util.Date;
 import java.sql.Timestamp;
 
+import cn.com.annotation.Dict;
+import cn.com.common.constant.DictConstantType;
 import cn.com.entity.base.BaseEntity;
+import lombok.Data;
 import org.beetl.sql.core.annotatoin.AssignID;
 import org.beetl.sql.core.annotatoin.Table;
 import org.hibernate.annotations.GenericGenerator;
@@ -20,6 +23,7 @@ import javax.persistence.Id;
 */
 @Table(name="pgzs.customer")
 @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
+@Data
 public class Customer extends BaseEntity<Customer> implements Serializable {
 
 	@Id
@@ -29,6 +33,7 @@ public class Customer extends BaseEntity<Customer> implements Serializable {
 	/*
 	地区
 	*/
+	@Dict(type = DictConstantType.ADMIN_AREAS_TYPE)
 	private String address ;
 	/*
 	面积
@@ -42,10 +47,12 @@ public class Customer extends BaseEntity<Customer> implements Serializable {
 	/*
 	户型
 	*/
+	@Dict(type = DictConstantType.ADMIN_LAYOUT_TYPE)
 	private String layout ;
 	private String name ;
 	private String phone ;
 	private String status ;
+	@Dict(type = DictConstantType.ADMIN_TYPE_TYPE)
 	private String type ;
 	private Date createTime ;
 	
