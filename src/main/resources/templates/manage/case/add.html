@@ -18,33 +18,51 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">小区名称</label>
-        <div class="layui-input-block">
-            <input th:type="text" th:id="areasName" th:name="areasName" lay-verify="required" autocomplete="off" class="layui-input">
+        <label th:for="houseName" class="layui-form-label">
+            楼盘名称
+        </label>
+        <div class="layui-input-inline">
+            <select class="form-control select2" th:id="areasId" th:name="areasId" >
+                <option value=""> --- 请选择 --- </option>
+                <option th:each="c:${heatAreasList}"  th:value="${c.areasId}" th:text="${c.name}" ></option>
+            </select>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">面积</label>
-        <div class="layui-input-block">
+        <div class="layui-input-inline">
             <input th:type="text" th:id="area" th:name="area" lay-verify="required" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">户型</label>
-        <div class="layui-input-block">
-            <input th:type="text" th:id="layout" th:name="layout" lay-verify="required" autocomplete="off" class="layui-input">
+        <label th:for="layout" class="layui-form-label">
+            户型
+        </label>
+        <div class="layui-input-inline">
+            <select class="form-control select2" th:id="layout" th:name="layout" >
+                <option value=""> --- 请选择 --- </option>
+                <option th:each="c:${layoutList}"  th:value="${c.value}" th:text="${c.name}" ></option>
+            </select>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">装修风格</label>
-        <div class="layui-input-block">
-            <input th:type="text" th:id="style" th:name="style" lay-verify="required" autocomplete="off" class="layui-input">
+        <div class="layui-input-inline">
+            <select class="form-control select2" th:id="style" th:name="style" >
+                <option value=""> --- 请选择 --- </option>
+                <option th:each="c:${styleList}"  th:value="${c.value}" th:text="${c.name}" ></option>
+            </select>
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">设计师</label>
-        <div class="layui-input-block">
-            <input th:type="text" th:id="designer" th:name="designer" lay-verify="required" autocomplete="off" class="layui-input">
+        <label th:for="type" class="layui-form-label">
+            设计师
+        </label>
+        <div class="layui-input-inline">
+            <select class="form-control select2" th:id="designerId" th:name="designerId" >
+                <option value=""> --- 请选择 --- </option>
+                <option th:each="c:${designerList}"  th:value="${c.designerId}" th:text="${c.name}" ></option>
+            </select>
         </div>
     </div>
     <div class="layui-form-item">

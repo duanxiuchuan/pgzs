@@ -4,12 +4,17 @@ import java.math.*;
 import java.util.Date;
 import java.sql.Timestamp;
 
+import cn.com.annotation.Dict;
+import cn.com.common.constant.DictConstantType;
 import cn.com.entity.base.BaseEntity;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.beetl.sql.core.annotatoin.AssignID;
 import org.beetl.sql.core.annotatoin.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -20,6 +25,9 @@ import javax.persistence.Id;
 */
 @Table(name="pgzs.designer")
 @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
+@Data
+@Accessors(chain = true)
+@Entity
 public class Designer  extends BaseEntity<Designer> implements Serializable {
 
 	@Id
@@ -33,107 +41,30 @@ public class Designer  extends BaseEntity<Designer> implements Serializable {
 	private String idea ;
 	private String name ;
 	private String status ;
+	@Dict(type = DictConstantType.ADMIN_STYLE_TYPE)
 	private String style ;
+	@Dict(type = DictConstantType.ADMIN_DESIGENR_TYPE)
 	private String type ;
 	/*
 	代表作品
 	*/
 	private String works ;
+	private String caseName;
 	private String years ;
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
 	private String title;
-	
+	private String appointment;
+	private String clicks;
+	private String cases;
 	public Designer() {
 	}
 
 	@AssignID("uuid")
 	@Column(length = 32)
-	public String getDesignerId(){
-		return  designerId;
+	public String getDesignerId() {
+		return designerId;
 	}
-	public void setDesignerId(String designerId ){
+
+	public void setDesignerId(String designerId) {
 		this.designerId = designerId;
 	}
-	
-	public String getEducation(){
-		return  education;
-	}
-	public void setEducation(String education ){
-		this.education = education;
-	}
-	
-	/**
-	* 设计理念
-	*@return 
-	*/
-	public String getIdea(){
-		return  idea;
-	}
-	/**
-	* 设计理念
-	*@param  idea
-	*/
-	public void setIdea(String idea ){
-		this.idea = idea;
-	}
-	
-	public String getName(){
-		return  name;
-	}
-	public void setName(String name ){
-		this.name = name;
-	}
-	
-	public String getStatus(){
-		return  status;
-	}
-	public void setStatus(String status ){
-		this.status = status;
-	}
-	
-	public String getStyle(){
-		return  style;
-	}
-	public void setStyle(String style ){
-		this.style = style;
-	}
-	
-	public String getType(){
-		return  type;
-	}
-	public void setType(String type ){
-		this.type = type;
-	}
-	
-	/**
-	* 代表作品
-	*@return 
-	*/
-	public String getWorks(){
-		return  works;
-	}
-	/**
-	* 代表作品
-	*@param  works
-	*/
-	public void setWorks(String works ){
-		this.works = works;
-	}
-	
-	public String getYears(){
-		return  years;
-	}
-	public void setYears(String years ){
-		this.years = years;
-	}
-	
-
 }

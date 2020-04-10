@@ -4,9 +4,11 @@ findPage
 
     select
     @pageTag(){
-        c.*
+        c.*,h.name as houseName,d.name as designerName
     @}
     from  customer c
+    left join heat_areas h on c.house_name = h.areas_id
+    left join designer d on c.designer_id = d.designer_id
     where 1 = 1 
     and c.status =1
     @if(!isEmpty(name)) {

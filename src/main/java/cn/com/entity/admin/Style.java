@@ -4,12 +4,17 @@ import java.math.*;
 import java.util.Date;
 import java.sql.Timestamp;
 
+import cn.com.annotation.Dict;
+import cn.com.common.constant.DictConstantType;
 import cn.com.entity.base.BaseEntity;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.beetl.sql.core.annotatoin.AssignID;
 import org.beetl.sql.core.annotatoin.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -20,6 +25,9 @@ import javax.persistence.Id;
 */
 @Table(name="pgzs.style")
 @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
+@Data
+@Entity
+@Accessors(chain = true)
 public class Style extends BaseEntity<Style> implements Serializable {
 
 	@Id
@@ -27,28 +35,15 @@ public class Style extends BaseEntity<Style> implements Serializable {
 	@Column(length = 32)
 	private String styleId ;
 	private String detail ;
+	@Dict(type = DictConstantType.ADMIN_FUCA_TYPE)
 	private String fuca ;
+	@Dict(type = DictConstantType.ADMIN_SPACE_TYPE)
 	private String space ;
 	private String status ;
+	@Dict(type = DictConstantType.ADMIN_STYLE_TYPE)
 	private String style ;
 	private String title;
 	private String remark;
-
-	public String getRemark() {
-		return remark;
-	}
-
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
 
 	public Style() {
 	}
@@ -61,42 +56,6 @@ public class Style extends BaseEntity<Style> implements Serializable {
 	public void setStyleId(String styleId ){
 		this.styleId = styleId;
 	}
-	
-	public String getDetail(){
-		return  detail;
-	}
-	public void setDetail(String detail ){
-		this.detail = detail;
-	}
 
-	public String getFuca() {
-		return fuca;
-	}
-
-	public void setFuca(String fuca) {
-		this.fuca = fuca;
-	}
-
-	public String getSpace(){
-		return  space;
-	}
-	public void setSpace(String space ){
-		this.space = space;
-	}
-	
-	public String getStatus(){
-		return  status;
-	}
-	public void setStatus(String status ){
-		this.status = status;
-	}
-	
-	public String getStyle(){
-		return  style;
-	}
-	public void setStyle(String style ){
-		this.style = style;
-	}
-	
 
 }

@@ -64,13 +64,28 @@
         </div>
         <div class="layui-form-item">
             <label th:for="type" class="layui-form-label">
+                预约类型
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="type" th:name="type"  th:value="${cust.type}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label th:for="type" class="layui-form-label">
+                设计师
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="designerId" th:name="designerId" th:value="${cust.designerId}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label th:for="type" class="layui-form-label">
                 建筑面积
             </label>
             <div class="layui-input-inline">
-                <input th:type="text" th:id="area" th:name="area"  autocomplete="off" class="layui-input">
+                <input th:type="text" th:id="area" th:name="area" th:value="${cust.area}" autocomplete="off" class="layui-input">
             </div>
         </div>
-
     </form>
 </div>
 <script>

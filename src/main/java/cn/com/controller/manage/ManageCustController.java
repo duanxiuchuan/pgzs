@@ -1,5 +1,6 @@
 package cn.com.controller.manage;
 
+import cn.com.common.constant.DictConstantType;
 import cn.com.common.message.JsonResult;
 import cn.com.common.result.ResultMap;
 import cn.com.controller.manage.base.BaseController;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -73,15 +75,15 @@ public class ManageCustController extends BaseController {
     @RequestMapping("addPage")
     public String addPage(HttpServletRequest request) {
         //查询所有地区
-       List<Dict> aerasList = dictService.findByType("地区");
+       List<Dict> aerasList = dictService.findByType(DictConstantType.ADMIN_AREAS_TYPE);
         //查询所有设计师
         List<Designer> designerList = designerService.findAll();
         //查询所有小区
         List<HeatAreas> heatAreasList = heatAreasService.findAll();
         //查询所有户型
-        List<Dict> layoutList = dictService.findByType("户型");
+        List<Dict> layoutList = dictService.findByType(DictConstantType.ADMIN_LAYOUT_TYPE);
         //预约类型
-        List<Dict> typeList = dictService.findByType("预约类型");
+        List<Dict> typeList = dictService.findByType(DictConstantType.ADMIN_TYPE_TYPE);
         request.setAttribute("aerasList",aerasList);
         request.setAttribute("designerList",designerList);
         request.setAttribute("heatAreasList",heatAreasList);
@@ -124,12 +126,24 @@ public class ManageCustController extends BaseController {
      * 查看界面
      *
      * @param request
-     * @param phone
+     * @param custId
      * @return
      */
-    @RequestMapping("/view/{phone}")
-    public String view(HttpServletRequest request, @PathVariable("phone") String phone) {
-        Customer customer = custService.findByphone(phone);
+    @RequestMapping("/view/{custId}")
+    public String view(HttpServletRequest request, @PathVariable("custId") String custId) {
+        Customer customer = custService.findById(custId);
+        if(!"".equals(customer.getHouseName()) && customer.getHouseName() != null){
+            HeatAreas areas = heatAreasService.findById(customer.getHouseName());
+            if(areas != null){
+                customer.setHouseName(areas.getName());
+            }
+        }
+        if(!"".equals(customer.getDesignerId()) && customer.getDesignerId() != null){
+            Designer designer = designerService.findById(customer.getDesignerId());
+            if(designer != null){
+                customer.setDesignerId(designer.getName());
+            }
+        }
         request.setAttribute("cust", customer);
         return "manage/cust/view";
     }
@@ -143,7 +157,30 @@ public class ManageCustController extends BaseController {
      */
     @RequestMapping("/editPage/{phone}")
     public String editPage(HttpServletRequest request, @PathVariable("phone") String phone) {
+        //查询所有地区
+        List<Dict> aerasList = dictService.findByType(DictConstantType.ADMIN_AREAS_TYPE);
+        //查询所有设计师
+        List<Designer> designerList = designerService.findAllByStatus();
+        //查询所有小区
+        List<HeatAreas> heatAreasList = heatAreasService.findAllByStatus();
+        //查询所有户型
+        List<Dict> layoutList = dictService.findByType(DictConstantType.ADMIN_LAYOUT_TYPE);
+        //预约类型
+        List<Dict> typeList = dictService.findByType(DictConstantType.ADMIN_TYPE_TYPE);
+        request.setAttribute("aerasList",aerasList);
+        request.setAttribute("designerList",designerList);
+        request.setAttribute("heatAreasList",heatAreasList);
+        request.setAttribute("layoutList",layoutList);
+        request.setAttribute("typeList",typeList);
         Customer customer = custService.findByphone(phone);
+        if(!"".equals(customer.getHouseName()) && customer.getHouseName() != null){
+            HeatAreas areas = heatAreasService.findById(customer.getHouseName());
+            customer.setHouseName(areas.getName());
+        }
+       if(!"".equals(customer.getDesignerId()) && customer.getDesignerId() != null){
+           Designer designer = designerService.findById(customer.getDesignerId());
+           customer.setDesignerId(designer.getName());
+       }
         request.setAttribute("cust", customer);
         return "manage/cust/edit";
     }

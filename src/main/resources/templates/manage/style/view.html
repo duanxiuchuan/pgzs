@@ -15,25 +15,25 @@
         <label class="layui-form-label">标题</label>
         <div class="layui-input-block">
             <input th:type="text" th:id="title" th:name="title" th:value="${style.title}" lay-verify="required" autocomplete="off" class="layui-input">
-            <input type="hidden" th:name="areasId" th:value="${style.styleId}">
+            <input type="hidden" th:name="styleId" th:value="${style.styleId}">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">空间</label>
         <div class="layui-input-block">
-            <input th:type="text" th:id="space" th:name="space" th:value="${style.space}" lay-verify="required" autocomplete="off" class="layui-input">
+            <input th:checked="${style.space eq c.name}" th:each="c:${spaceList}" type="radio" th:title="${c.name}"  th:value="${c.value}" th:name="space">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">风格</label>
+        <label class="layui-form-label">设计风格</label>
         <div class="layui-input-block">
-            <input th:type="text" th:id="style" th:name="style" th:value="${style.style}" lay-verify="required" autocomplete="off" class="layui-input">
+            <input th:checked="${style.style.contains(c.name)}" th:each="c:${styleList}"  type="checkbox" th:title="${c.name}"  th:value="${c.value}" th:name="style">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">功能</label>
         <div class="layui-input-block">
-            <input th:type="text" th:id="fuca" th:name="fuca" th:value="${style.fuca}" lay-verify="required" autocomplete="off" class="layui-input">
+            <input th:checked="${style.fuca eq c.name}" th:each="c:${fucaList}" type="radio" th:title="${c.name}"  th:value="${c.value}" th:name="fuca">
         </div>
     </div>
     <div class="layui-form-item">

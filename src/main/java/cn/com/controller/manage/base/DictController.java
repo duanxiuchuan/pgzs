@@ -2,6 +2,7 @@ package cn.com.controller.manage.base;
 
 import cn.com.annotation.Log;
 import cn.com.common.message.JsonResult;
+import cn.com.common.redis.RedisService;
 import cn.com.common.result.ResultMap;
 import cn.com.entity.admin.Admin;
 import cn.com.entity.base.Dict;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
@@ -32,6 +34,8 @@ public class DictController extends BaseController {
     @Autowired
     private DictService dictService;
 
+    @Resource
+    protected RedisService redisService;
 
     @RequestMapping("list")
     public String list() {
@@ -75,6 +79,7 @@ public class DictController extends BaseController {
             dict = dictService.save(dict, admin);
             Long id = dictService.saveModel(dict);
             if (id > 0L) {
+                redisService.remove(dict.getType());
                 return super.messageResult(i18nMessage.getMessage("admin.common.addSuccess"), true);
             } else {
                 return super.messageResult(i18nMessage.getMessage("admin.common.addFail"), false);

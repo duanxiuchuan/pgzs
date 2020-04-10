@@ -20,8 +20,11 @@
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">设计师类型</label>
-        <div class="layui-input-block">
-            <input th:type="text" th:id="type" th:name="type"  th:value="${designer.type}" lay-verify="required" autocomplete="off" class="layui-input">
+        <div class="layui-input-inline">
+            <select class="form-control select2" th:id="type" th:name="type" >
+                <option value=""> --- 请选择 --- </option>
+                <option th:selected="${designer.type == c.name}" th:each="c:${designerList}"  th:value="${c.value}" th:text="${c.name}" ></option>
+            </select>
         </div>
     </div>
     <div class="layui-form-item">
@@ -39,7 +42,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">设计风格</label>
         <div class="layui-input-block">
-            <input th:type="text" th:id="style" th:name="style" th:value="${designer.style}" lay-verify="required" autocomplete="off" class="layui-input">
+            <input th:checked="${designer.style.contains(c.name)}" th:each="c:${styleList}"  type="checkbox" th:title="${c.name}"  th:value="${c.value}" th:name="style">
         </div>
     </div>
     <div class="layui-form-item">
@@ -49,9 +52,30 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">预约数</label>
+        <div class="layui-input-inline">
+            <input th:type="text" th:id="appointment" th:name="appointment" th:value="${designer.appointment}" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">案例数</label>
+        <div class="layui-input-inline">
+            <input th:type="text" th:id="cases" th:name="cases" th:value="${designer.cases}"lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">点击次数</label>
+        <div class="layui-input-inline">
+            <input th:type="text" th:id="clicks" th:name="clicks" th:value="${designer.clicks}" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">代表作品</label>
-        <div class="layui-input-block">
-            <input th:type="text" th:id="works" th:name="works" th:value="${designer.works}" lay-verify="required" autocomplete="off" class="layui-input">
+        <div class="layui-input-inline">
+            <select class="form-control select2" th:id="works" th:name="works" >
+                <option value=""> --- 请选择 --- </option>
+                <option th:selected="${designer.works == c.caseId}" th:each="c:${caseListList}"  th:value="${c.caseId}" th:text="${c.title}" ></option>
+            </select>
         </div>
     </div>
     <div class="layui-form-item">
@@ -86,6 +110,13 @@
         form.on('submit(edit)', function (data) {
             $("#form").find("button").prop("disabled", true);
             params = data.field;
+            //获取checkbox[name='foodId']的值，获取所有选中的复选框，并将其值放入数组中
+            var arr = new Array();
+            $("input:checkbox[name='style']:checked").each(function(i){
+                arr[i] = $(this).val();
+            });
+            //  替换 data.field.foodId的数据为拼接后的字符串
+            params.style = arr.join(",");//将数组合并成字符串
             $.post("/manage/design/update", params, function (data) {
                 if (data.status == 400) {
                     layer.msg(data.result, {time: 2000, icon: 5});

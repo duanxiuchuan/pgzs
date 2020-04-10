@@ -1,9 +1,11 @@
 package cn.com.controller.manage;
 
+import cn.com.common.constant.DictConstantType;
 import cn.com.common.message.JsonResult;
 import cn.com.common.result.ResultMap;
 import cn.com.controller.manage.base.BaseController;
 import cn.com.entity.admin.*;
+import cn.com.entity.base.Dict;
 import cn.com.service.admin.*;
 import cn.com.utils.StringUtils;
 import cn.com.utils.UUIDUtil;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/manage/wiki")
@@ -27,6 +30,9 @@ public class ManageWikiController extends BaseController {
 
     @Autowired
     private WikiService wikiService;
+
+    @Autowired
+    private DictService dictService;
 
     @RequestMapping("list")
     public String list() {
@@ -51,9 +57,10 @@ public class ManageWikiController extends BaseController {
     }
 
     @RequestMapping("addPage")
-    public String addPage() {
-        //查询所有设计师
-
+    public String addPage(HttpServletRequest request) {
+        //查询百科类型
+        List<Dict> wikiList = dictService.findByType(DictConstantType.ADMIN_WIKI_TYPE);
+        request.setAttribute("wikiList",wikiList);
         return "manage/wiki/add";
     }
 
@@ -81,6 +88,9 @@ public class ManageWikiController extends BaseController {
      */
     @RequestMapping("/view/{wikiId}")
     public String view(HttpServletRequest request, @PathVariable("wikiId") String wikiId) {
+        //查询百科类型
+        List<Dict> wikiList = dictService.findByType(DictConstantType.ADMIN_WIKI_TYPE);
+        request.setAttribute("wikiList",wikiList);
         Wiki wiki = wikiService.findById(wikiId);
         request.setAttribute("wiki",wiki);
         return "manage/wiki/view";
@@ -95,6 +105,9 @@ public class ManageWikiController extends BaseController {
      */
     @RequestMapping("/editPage/{wikiId}")
     public String editPage(HttpServletRequest request, @PathVariable("wikiId") String wikiId) {
+        //查询百科类型
+        List<Dict> wikiList = dictService.findByType(DictConstantType.ADMIN_WIKI_TYPE);
+        request.setAttribute("wikiList",wikiList);
         Wiki wiki = wikiService.findById(wikiId);
         request.setAttribute("wiki",wiki);
         return "manage/wiki/edit";

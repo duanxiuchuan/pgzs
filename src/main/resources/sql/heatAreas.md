@@ -24,3 +24,7 @@ deleteByAreasId
 ===
 * 逻辑删除
 update heat_areas set status =0 where status =1 and areas_id = #areasId#
+
+findAllByStatus
+===
+select * from heat_areas where status = 1

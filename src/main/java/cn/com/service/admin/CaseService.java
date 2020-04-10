@@ -5,6 +5,8 @@ import cn.com.entity.admin.Case;
 import cn.com.entity.admin.Customer;
 import org.beetl.sql.core.engine.PageQuery;
 
+import java.util.List;
+
 public interface CaseService extends BaseService<Case> {
     /**
      * 查询所有并分页
@@ -19,4 +21,6 @@ public interface CaseService extends BaseService<Case> {
     void update(Case cass);
 
     void deleteByCaseId(String caseId);
+
+    List<Case> findAllByStatus();
 }

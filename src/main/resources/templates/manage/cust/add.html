@@ -87,7 +87,7 @@
               设计师
             </label>
             <div class="layui-input-inline">
-                <select class="form-control select2" th:id="houseName" th:name="houseName" >
+                <select class="form-control select2" th:id="designerId" th:name="designerId" >
                     <option value=""> --- 请选择 --- </option>
                     <option th:each="c:${designerList}"  th:value="${c.designerId}" th:text="${c.name}" ></option>
                 </select>

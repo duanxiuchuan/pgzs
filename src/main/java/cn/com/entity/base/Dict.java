@@ -28,6 +28,7 @@ public class Dict extends BaseEntity<Dict> implements Serializable {
     private String typeName;
     private Integer delFlag;
     private String remark;
+    private String type;
 
 
 

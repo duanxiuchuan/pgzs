@@ -4,12 +4,17 @@ import java.math.*;
 import java.util.Date;
 import java.sql.Timestamp;
 
+import cn.com.annotation.Dict;
+import cn.com.common.constant.DictConstantType;
 import cn.com.entity.base.BaseEntity;
+import lombok.Data;
+import lombok.experimental.Accessors;
 import org.beetl.sql.core.annotatoin.AssignID;
 import org.beetl.sql.core.annotatoin.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
@@ -20,34 +25,22 @@ import javax.persistence.Id;
 */
 @Table(name="pgzs.heat_areas")
 @GenericGenerator(name = "jpa-uuid", strategy = "uuid")
+@Data
+@Accessors(chain = true)
+@Entity
 public class HeatAreas extends BaseEntity<HeatAreas> implements Serializable {
 
 	@Id
 	@GeneratedValue(generator = "jpa-uuid")
 	@Column(length = 32)
 	private String areasId ;
+	@Dict(type = DictConstantType.ADMIN_AREAS_TYPE)
 	private String address ;
 	private String remark ;
 	private String status ;
 	private String title ;
 	private String detail;
 	private String name;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDetail() {
-		return detail;
-	}
-
-	public void setDetail(String detail) {
-		this.detail = detail;
-	}
 
 	public HeatAreas() {
 	}
@@ -60,34 +53,4 @@ public class HeatAreas extends BaseEntity<HeatAreas> implements Serializable {
 	public void setAreasId(String areasId ){
 		this.areasId = areasId;
 	}
-	
-	public String getAddress(){
-		return  address;
-	}
-	public void setAddress(String address ){
-		this.address = address;
-	}
-	
-	public String getRemark(){
-		return  remark;
-	}
-	public void setRemark(String remark ){
-		this.remark = remark;
-	}
-	
-	public String getStatus(){
-		return  status;
-	}
-	public void setStatus(String status ){
-		this.status = status;
-	}
-	
-	public String getTitle(){
-		return  title;
-	}
-	public void setTitle(String title ){
-		this.title = title;
-	}
-	
-
 }

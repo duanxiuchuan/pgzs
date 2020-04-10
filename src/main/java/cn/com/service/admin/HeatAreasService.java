@@ -3,6 +3,8 @@ package cn.com.service.admin;
 import cn.com.entity.admin.HeatAreas;
 import org.beetl.sql.core.engine.PageQuery;
 
+import java.util.List;
+
 public interface HeatAreasService extends BaseService<HeatAreas> {
     /**
      * 查询所有并分页
@@ -17,4 +19,6 @@ public interface HeatAreasService extends BaseService<HeatAreas> {
     void update(HeatAreas heatAreas);
 
     void deleteByAreasId(String areasId);
+
+    List<HeatAreas> findAllByStatus();
 }

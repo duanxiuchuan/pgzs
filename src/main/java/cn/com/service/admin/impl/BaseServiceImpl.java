@@ -123,10 +123,26 @@ public class BaseServiceImpl<T extends BaseEntity<T>> implements BaseService<T> 
                     try {
                         String display = "";
                         Object fieldValue = field.get(ext);
-                        if (fieldValue != null) {
+                        //新增 对应多个value值
+                        if(fieldValue.toString().contains(",")){
+                            String[] values = fieldValue.toString().split(",");
+                            for (String value: values) {
+                                if (value != null) {
+                                    cn.com.entity.base.Dict dbDict;
+                                    String dbDictStr = redisService.get(dict.type() + value.toString());
+                                    if (StringUtils.isNotEmpty(dbDictStr) && !"null".equals(dbDictStr)) {
+                                        dbDict = JsonUtil.getObject(dbDictStr, cn.com.entity.base.Dict.class);
+                                    } else {
+                                        dbDict = dictService.findCoreDict(dict.type(), value.toString());
+                                    }
+                                    redisService.set(dict.type() + value.toString(), JsonUtil.getJson(dbDict));
+                                    display += dbDict != null ? dbDict.getName()+"," : null;
+                                }
+                            }
+                        }else if (fieldValue != null) {
                             cn.com.entity.base.Dict dbDict;
                             String dbDictStr = redisService.get(dict.type() + fieldValue.toString());
-                            if (StringUtils.isNotEmpty(dbDictStr)) {
+                            if (StringUtils.isNotEmpty(dbDictStr) && !"null".equals(dbDictStr)) {
                                 dbDict = JsonUtil.getObject(dbDictStr, cn.com.entity.base.Dict.class);
                             } else {
                                 dbDict = dictService.findCoreDict(dict.type(), fieldValue.toString());
@@ -134,7 +150,8 @@ public class BaseServiceImpl<T extends BaseEntity<T>> implements BaseService<T> 
                             redisService.set(dict.type() + fieldValue.toString(), JsonUtil.getJson(dbDict));
                             display = dbDict != null ? dbDict.getName() : null;
                         }
-                        ext.set(field.getName() + dict.suffix(), display);
+//                        ext.set(field.getName(), display);
+                        field.set(ext,display);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

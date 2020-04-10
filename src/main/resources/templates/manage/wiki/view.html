@@ -27,7 +27,10 @@
     <div class="layui-form-item">
         <label class="layui-form-label">类型</label>
         <div class="layui-input-block">
-            <input th:type="text" th:id="type" th:name="type" th:value="${wiki.type}" lay-verify="required" autocomplete="off" class="layui-input">
+            <select class="form-control select2" th:id="type" th:name="type" >
+                <option value=""> --- 请选择 --- </option>
+                <option th:selected="${wiki.type eq c.name}" th:each="c:${wikiList}"  th:value="${c.value}" th:text="${c.name}" ></option>
+            </select>
         </div>
     </div>
     <div class="layui-form-item">

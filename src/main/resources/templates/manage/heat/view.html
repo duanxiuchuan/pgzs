@@ -21,13 +21,16 @@
         <label class="layui-form-label">小区名称</label>
         <div class="layui-input-block">
             <input th:type="text" th:id="name" th:name="name" th:value="${heat.name}" lay-verify="required" autocomplete="off" class="layui-input">
+            <input type="hidden" id="detils" th:value="${heat.detail}">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">地区</label>
-        <div class="layui-input-block">
-            <input th:type="text" th:id="address" th:name="address" th:value="${heat.address}" lay-verify="required" autocomplete="off" class="layui-input">
-            <input type="hidden" id="detils" th:value="${heat.detail}">
+        <div class="layui-input-inline">
+            <select class="form-control select2" th:id="address" th:name="address" >
+                <option value=""> --- 请选择 --- </option>
+                <option th:selected="${heat.address eq c.name}" th:each="c:${areasList}"  th:value="${c.value}" th:text="${c.name}" ></option>
+            </select>
         </div>
     </div>
     <div class="layui-form-item">

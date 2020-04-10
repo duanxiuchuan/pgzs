@@ -20,7 +20,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">小区名称</label>
         <div class="layui-input-block">
-            <input th:type="text" th:id="areasName" th:name="areasName" th:value="${case.areasName}" lay-verify="required" autocomplete="off" class="layui-input">
+            <input th:type="text" th:id="areasName" th:name="areasName" th:value="${case.areasId}" lay-verify="required" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -44,7 +44,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">设计师</label>
         <div class="layui-input-block">
-            <input th:type="text" th:id="designer" th:name="designer" th:value="${case.designer}" lay-verify="required" autocomplete="off" class="layui-input">
+            <input th:type="text" th:id="designer" th:name="designer" th:value="${case.designerName}" lay-verify="required" autocomplete="off" class="layui-input">
             <input type="hidden" id="detils" th:value="${case.detail}">
         </div>
     </div>

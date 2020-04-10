@@ -3,6 +3,8 @@ package cn.com.service.admin;
 import cn.com.entity.admin.Designer;
 import org.beetl.sql.core.engine.PageQuery;
 
+import java.util.List;
+
 public interface DesignerService extends BaseService<Designer> {
     /**
      * 查询所有并分页
@@ -17,4 +19,6 @@ public interface DesignerService extends BaseService<Designer> {
     void update(Designer designer);
 
     void deleteByDesignerId(String caseId);
+
+    List<Designer> findAllByStatus();
 }

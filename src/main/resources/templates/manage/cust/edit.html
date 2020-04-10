@@ -40,27 +40,58 @@
             </div>
         </div>
         <div class="layui-form-item">
-            <label th:for="type" class="layui-form-label">
+            <label th:for="layout" class="layui-form-label">
                 户型
             </label>
             <div class="layui-input-inline">
-                <input th:type="text" th:id="layout" th:name="layout" th:value="${cust.layout}" autocomplete="off" class="layui-input">
+                <select class="form-control select2" th:id="layout" th:name="layout" >
+                    <option value=""> --- 请选择 --- </option>
+                    <option th:selected="${cust.layout == c.value}" th:each="c:${layoutList}"  th:value="${c.value}" th:text="${c.name}" ></option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
-            <label th:for="type" class="layui-form-label">
+            <label th:for="address" class="layui-form-label">
                 地区
             </label>
             <div class="layui-input-inline">
-                <input th:type="text" th:id="address" th:name="address"  th:value="${cust.address}" autocomplete="off" class="layui-input">
+                <select class="form-control select2" th:id="address" th:name="address" >
+                    <option value=""> --- 请选择 --- </option>
+                    <option th:selected="${cust.address == c.value}" th:each="c:${aerasList}"  th:value="${c.value}" th:text="${c.name}" ></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label th:for="houseName" class="layui-form-label">
+                楼盘名称
+            </label>
+            <div class="layui-input-inline">
+                <select class="form-control select2" th:id="houseName" th:name="houseName" >
+                    <option value=""> --- 请选择 --- </option>
+                    <option th:selected="${cust.houseName == c.name}" th:each="c:${heatAreasList}"  th:value="${c.areasId}" th:text="${c.name}" ></option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
             <label th:for="type" class="layui-form-label">
-                楼盘名称
+                预约类型
             </label>
             <div class="layui-input-inline">
-                <input th:type="text" th:id="houseName" th:name="houseName"  th:value="${cust.houseName}" autocomplete="off" class="layui-input">
+                <select class="form-control select2" th:id="type" th:name="type" >
+                    <option value=""> --- 请选择 --- </option>
+                    <option th:selected="${cust.type == c.value}" th:each="c:${typeList}"  th:value="${c.value}" th:text="${c.name}" ></option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label th:for="type" class="layui-form-label">
+                设计师
+            </label>
+            <div class="layui-input-inline">
+                <select class="form-control select2" th:id="designerId" th:name="designerId" >
+                    <option value=""> --- 请选择 --- </option>
+                    <option th:selected="${cust.designerId == c.name}" th:each="c:${designerList}"  th:value="${c.designerId}" th:text="${c.name}" ></option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
@@ -68,7 +99,7 @@
                 建筑面积
             </label>
             <div class="layui-input-inline">
-                <input th:type="text" th:id="area" th:name="area"  autocomplete="off" class="layui-input">
+                <input th:type="text" th:id="area" th:name="area" th:value="${cust.area}" autocomplete="off" class="layui-input">
             </div>
         </div>
 

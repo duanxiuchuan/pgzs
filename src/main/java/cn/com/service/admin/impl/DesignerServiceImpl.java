@@ -7,6 +7,8 @@ import org.beetl.sql.core.engine.PageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DesignerServiceImpl extends BaseServiceImpl<Designer> implements DesignerService {
 
@@ -14,7 +16,9 @@ public class DesignerServiceImpl extends BaseServiceImpl<Designer> implements De
     private DesignerDao designerDao;
     @Override
     public PageQuery<Designer> findPage(PageQuery<Designer> query) {
-        return designerDao.findPage(query);
+        PageQuery<Designer> ret = designerDao.findPage(query);
+        queryListAfter(ret.getList());
+        return ret;
     }
 
     @Override
@@ -30,5 +34,10 @@ public class DesignerServiceImpl extends BaseServiceImpl<Designer> implements De
     @Override
     public void deleteByDesignerId(String designerId) {
         designerDao.deleteByDesignerId(designerId);
+    }
+
+    @Override
+    public List<Designer> findAllByStatus() {
+        return designerDao.findAllByStatus();
     }
 }

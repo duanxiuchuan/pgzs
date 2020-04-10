@@ -1,13 +1,12 @@
 package cn.com.controller.manage;
 
+import cn.com.common.constant.DictConstantType;
 import cn.com.common.message.JsonResult;
 import cn.com.common.result.ResultMap;
 import cn.com.controller.manage.base.BaseController;
 import cn.com.entity.admin.*;
-import cn.com.service.admin.CaseService;
-import cn.com.service.admin.DesignerService;
-import cn.com.service.admin.HeatAreasService;
-import cn.com.service.admin.StyleService;
+import cn.com.entity.base.Dict;
+import cn.com.service.admin.*;
 import cn.com.utils.StringUtils;
 import cn.com.utils.UUIDUtil;
 import org.beetl.sql.core.engine.PageQuery;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/manage/style")
@@ -31,6 +31,8 @@ public class ManageStyleController extends BaseController {
     @Autowired
     private StyleService styleService;
 
+    @Autowired
+    private DictService dictService;
     @RequestMapping("list")
     public String list() {
 
@@ -60,9 +62,16 @@ public class ManageStyleController extends BaseController {
     }
 
     @RequestMapping("addPage")
-    public String addPage() {
-        //查询所有设计师
-
+    public String addPage(HttpServletRequest request) {
+        //查询设计空间
+        List<Dict> spaceList = dictService.findByType(DictConstantType.ADMIN_SPACE_TYPE);
+        //查询设计功能
+        List<Dict> fucaList = dictService.findByType(DictConstantType.ADMIN_FUCA_TYPE);
+        //查询设计风格
+        List<Dict> styleList = dictService.findByType(DictConstantType.ADMIN_STYLE_TYPE);
+        request.setAttribute("spaceList",spaceList);
+        request.setAttribute("fucaList",fucaList);
+        request.setAttribute("styleList",styleList);
         return "manage/style/add";
     }
 
@@ -90,6 +99,15 @@ public class ManageStyleController extends BaseController {
      */
     @RequestMapping("/view/{styleId}")
     public String view(HttpServletRequest request, @PathVariable("styleId") String styleId) {
+        //查询设计空间
+        List<Dict> spaceList = dictService.findByType(DictConstantType.ADMIN_SPACE_TYPE);
+        //查询设计功能
+        List<Dict> fucaList = dictService.findByType(DictConstantType.ADMIN_FUCA_TYPE);
+        //查询设计风格
+        List<Dict> styleList = dictService.findByType(DictConstantType.ADMIN_STYLE_TYPE);
+        request.setAttribute("spaceList",spaceList);
+        request.setAttribute("fucaList",fucaList);
+        request.setAttribute("styleList",styleList);
         Style style = styleService.findById(styleId);
         request.setAttribute("style",style);
         return "manage/style/view";
@@ -104,6 +122,15 @@ public class ManageStyleController extends BaseController {
      */
     @RequestMapping("/editPage/{styleId}")
     public String editPage(HttpServletRequest request, @PathVariable("styleId") String styleId) {
+        //查询设计空间
+        List<Dict> spaceList = dictService.findByType(DictConstantType.ADMIN_SPACE_TYPE);
+        //查询设计功能
+        List<Dict> fucaList = dictService.findByType(DictConstantType.ADMIN_FUCA_TYPE);
+        //查询设计风格
+        List<Dict> styleList = dictService.findByType(DictConstantType.ADMIN_STYLE_TYPE);
+        request.setAttribute("spaceList",spaceList);
+        request.setAttribute("fucaList",fucaList);
+        request.setAttribute("styleList",styleList);
         Style style = styleService.findById(styleId);
         request.setAttribute("style",style);
         return "manage/style/edit";

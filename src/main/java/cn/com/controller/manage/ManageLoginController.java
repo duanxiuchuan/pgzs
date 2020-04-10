@@ -42,10 +42,10 @@ public class ManageLoginController {
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     public JsonResult submit(HttpServletRequest request, Admin admin, Model model) {
 
-        if (StringUtils.isEmpty(admin.getUserName())) {           
+        if (StringUtils.isEmpty(admin.getUserName())) {
             return JsonResult.error("请输入用户名", null);
         }
-        if (StringUtils.isEmpty(StringUtils.isEmpty(admin.getPassword()))) {           
+        if (StringUtils.isEmpty(StringUtils.isEmpty(admin.getPassword()))) {
             return JsonResult.error("请输入密码", null);
         }
         Subject subject = SecurityUtils.getSubject();

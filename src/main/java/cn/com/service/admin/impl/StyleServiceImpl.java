@@ -1,10 +1,7 @@
 package cn.com.service.admin.impl;
 
-import cn.com.dao.admin.HeatAreasDao;
 import cn.com.dao.admin.StyleDao;
-import cn.com.entity.admin.HeatAreas;
 import cn.com.entity.admin.Style;
-import cn.com.service.admin.HeatAreasService;
 import cn.com.service.admin.StyleService;
 import org.beetl.sql.core.engine.PageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +14,9 @@ public class StyleServiceImpl extends BaseServiceImpl<Style> implements StyleSer
     private StyleDao styleDao;
     @Override
     public PageQuery<Style> findPage(PageQuery<Style> query) {
-        return styleDao.findPage(query);
+        PageQuery<Style> ret = styleDao.findPage(query);
+        queryListAfter(ret.getList());
+        return ret;
     }
 
     @Override

@@ -13,49 +13,73 @@
 <form id="myForm" method="post" class="layui-form white-bg radius">
     <div class="layui-form-item">
         <label class="layui-form-label">设计师名称</label>
-        <div class="layui-input-block">
+        <div class="layui-input-inline">
             <input th:type="text" th:id="name" th:name="name" lay-verify="required" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">设计师类型</label>
-        <div class="layui-input-block">
-            <input th:type="text" th:id="type" th:name="type" lay-verify="required" autocomplete="off" class="layui-input">
+        <div class="layui-input-inline">
+            <select class="form-control select2" th:id="type" th:name="type" >
+                <option value=""> --- 请选择 --- </option>
+                <option th:each="c:${designerList}"  th:value="${c.value}" th:text="${c.name}" ></option>
+            </select>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">设计年限</label>
-        <div class="layui-input-block">
+        <div class="layui-input-inline">
             <input th:type="text" th:id="years" th:name="years" lay-verify="required" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">毕业院校</label>
-        <div class="layui-input-block">
+        <div class="layui-input-inline">
             <input th:type="text" th:id="education" th:name="education" lay-verify="required" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">设计风格</label>
         <div class="layui-input-block">
-            <input th:type="text" th:id="style" th:name="style" lay-verify="required" autocomplete="off" class="layui-input">
+            <input th:each="c:${styleList}"  type="checkbox" th:title="${c.name}"  th:value="${c.value}" th:name="style">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">设计理念</label>
-        <div class="layui-input-block">
+        <div class="layui-input-inline">
             <input th:type="text" th:id="idea" th:name="idea" lay-verify="required" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">预约数</label>
+        <div class="layui-input-inline">
+            <input th:type="text" th:id="appointment" th:name="appointment" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">案例数</label>
+        <div class="layui-input-inline">
+            <input th:type="text" th:id="cases" th:name="cases" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">点击次数</label>
+        <div class="layui-input-inline">
+            <input th:type="text" th:id="clicks" th:name="clicks" lay-verify="required" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">代表作品</label>
-        <div class="layui-input-block">
-            <input th:type="text" th:id="works" th:name="works" lay-verify="required" autocomplete="off" class="layui-input">
+        <div class="layui-input-inline">
+            <select class="form-control select2" th:id="works" th:name="works" >
+                <option value=""> --- 请选择 --- </option>
+                <option th:each="c:${caseListList}"  th:value="${c.caseId}" th:text="${c.title}" ></option>
+            </select>
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">头像</label>
-        <div class="layui-input-block">
+        <div class="layui-input-inline">
             <input type="image" class="layui-nav-img" name="title" id="test2" src="" value="" />
             <button type="button" class="layui-btn" id="test1">
                 <i class="layui-icon">&#xe67c;</i>上传头像
@@ -85,6 +109,14 @@
         form.on('submit(add)', function (data) {
             $("#form").find("button").prop("disabled", true);
             params = data.field;
+            //获取checkbox[name='foodId']的值，获取所有选中的复选框，并将其值放入数组中
+            var arr = new Array();
+            $("input:checkbox[name='style']:checked").each(function(i){
+                arr[i] = $(this).val();
+            });
+            //  替换 data.field.foodId的数据为拼接后的字符串
+            params.style = arr.join(",");//将数组合并成字符串
+
             $.post("save", params, function (data) {
                 if (data.status == 400) {
                     layer.msg(data.result, {time: 2000, icon: 5});

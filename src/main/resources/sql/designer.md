@@ -4,9 +4,10 @@ findPage
 
     select
     @pageTag(){
-        d.*
+        d.*,c.title as caseName
     @}
     from  designer d
+    left join exquisite_case c on d.works = c.case_id
     where 1 = 1
     and d.status = 1
     @if(!isEmpty(name)) {
@@ -24,3 +25,7 @@ deleteByDesignerId
 ===
 * 逻辑删除
 update designer set status =0 where status =1 and designer_id =#designerId#
+
+findAllByStatus
+===
+select * from designer where status = 1

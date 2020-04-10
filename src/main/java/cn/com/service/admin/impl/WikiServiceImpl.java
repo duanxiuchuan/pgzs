@@ -14,7 +14,9 @@ public class WikiServiceImpl extends BaseServiceImpl<Wiki> implements WikiServic
     private WikiDao wikiDao;
     @Override
     public PageQuery<Wiki> findPage(PageQuery<Wiki> query) {
-        return wikiDao.findPage(query);
+        PageQuery<Wiki> ret = wikiDao.findPage(query);
+        queryListAfter(ret.getList());
+        return ret;
     }
 
     @Override

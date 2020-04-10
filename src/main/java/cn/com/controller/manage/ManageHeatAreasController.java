@@ -1,5 +1,6 @@
 package cn.com.controller.manage;
 
+import cn.com.common.constant.DictConstantType;
 import cn.com.common.message.JsonResult;
 import cn.com.common.result.ResultMap;
 import cn.com.controller.manage.base.BaseController;
@@ -7,8 +8,10 @@ import cn.com.entity.admin.Admin;
 import cn.com.entity.admin.Case;
 import cn.com.entity.admin.Designer;
 import cn.com.entity.admin.HeatAreas;
+import cn.com.entity.base.Dict;
 import cn.com.service.admin.CaseService;
 import cn.com.service.admin.DesignerService;
+import cn.com.service.admin.DictService;
 import cn.com.service.admin.HeatAreasService;
 import cn.com.utils.StringUtils;
 import cn.com.utils.UUIDUtil;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping("/manage/heat")
@@ -32,6 +36,9 @@ public class ManageHeatAreasController extends BaseController {
 
     @Autowired
     private HeatAreasService heatAreasService;
+
+    @Autowired
+    private DictService dictService;
 
     @RequestMapping("list")
     public String list() {
@@ -59,9 +66,10 @@ public class ManageHeatAreasController extends BaseController {
     }
 
     @RequestMapping("addPage")
-    public String addPage() {
-        //查询所有设计师
-
+    public String addPage(HttpServletRequest request) {
+        //查询地区
+        List<Dict> areasList = dictService.findByType(DictConstantType.ADMIN_AREAS_TYPE);
+        request.setAttribute("areasList",areasList);
         return "manage/heat/add";
     }
 
@@ -89,6 +97,9 @@ public class ManageHeatAreasController extends BaseController {
      */
     @RequestMapping("/view/{areasId}")
     public String view(HttpServletRequest request, @PathVariable("areasId") String areasId) {
+        //查询地区
+        List<Dict> areasList = dictService.findByType(DictConstantType.ADMIN_AREAS_TYPE);
+        request.setAttribute("areasList",areasList);
         HeatAreas heatAreas = heatAreasService.findById(areasId);
         request.setAttribute("heat",heatAreas);
         return "manage/heat/view";
@@ -103,6 +114,9 @@ public class ManageHeatAreasController extends BaseController {
      */
     @RequestMapping("/editPage/{areasId}")
     public String editPage(HttpServletRequest request, @PathVariable("areasId") String areasId) {
+        //查询地区
+        List<Dict> areasList = dictService.findByType(DictConstantType.ADMIN_AREAS_TYPE);
+        request.setAttribute("areasList",areasList);
         HeatAreas heatAreas = heatAreasService.findById(areasId);
         request.setAttribute("heat",heatAreas);
         return "manage/heat/edit";

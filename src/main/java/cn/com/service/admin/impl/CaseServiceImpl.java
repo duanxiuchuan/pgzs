@@ -7,6 +7,8 @@ import org.beetl.sql.core.engine.PageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CaseServiceImpl extends BaseServiceImpl<Case> implements CaseService {
 
@@ -32,5 +34,10 @@ public class CaseServiceImpl extends BaseServiceImpl<Case> implements CaseServic
     @Override
     public void deleteByCaseId(String caseId) {
         caseDao.deleteByCaseId(caseId);
+    }
+
+    @Override
+    public List<Case> findAllByStatus() {
+        return caseDao.findAllByStatus();
     }
 }

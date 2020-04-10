@@ -32,7 +32,7 @@ public class DictServiceImpl extends BaseServiceImpl<Dict> implements DictServic
     public Dict findCoreDict(String type, String value) {
         List<Dict> list;
         String dictList =  redisService.get(type);
-        if (StringUtils.isNotEmpty(dictList) && !"null".equals(dictList)) {
+        if (StringUtils.isNotEmpty(dictList) && !"null".equals(dictList) && !"[]".equals(dictList)) {
             list = JsonListUtil.jsonToList(dictList, Dict.class);
         } else {
             list = dictDao.findByType(type);

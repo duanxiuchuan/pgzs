@@ -4,6 +4,8 @@ import org.beetl.sql.core.db.KeyHolder;
 import org.beetl.sql.core.engine.PageQuery;
 import cn.com.entity.admin.*;
 
+import java.util.List;
+
 /**
  * @Author Lidada
  * @Description：
@@ -17,4 +19,6 @@ public interface CaseDao extends cn.com.dao.base.BaseDao<Case> {
      PageQuery<Case> findPage(PageQuery<Case> query);
 
     void deleteByCaseId(@Param("caseId") String caseId);
+
+    List<Case> findAllByStatus();
 }

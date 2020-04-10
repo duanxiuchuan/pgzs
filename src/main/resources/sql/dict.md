@@ -21,7 +21,7 @@ findByType
 ===
 * 通过类型查询
        
-    select * from sys_dict where type_name = #type#
+    select * from sys_dict where type = #type#
     
     
 deleteByDictId
