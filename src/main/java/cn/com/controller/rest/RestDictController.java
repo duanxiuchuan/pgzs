@@ -26,6 +26,7 @@ import java.util.Map;
  * @author LiDaDa
  */
 @RestController
+@CrossOrigin
 @RequestMapping("/pgzs/dict")
 public class RestDictController extends BaseController {
     @Log

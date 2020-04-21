@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/pgzs/wiki")
 public class WikiController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(WikiController.class);

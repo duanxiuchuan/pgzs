@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/pgzs/heat")
 public class HeatAreasController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(ManageCaseController.class);

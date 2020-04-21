@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/pgzs/style")
 public class StyleController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(StyleController.class);
