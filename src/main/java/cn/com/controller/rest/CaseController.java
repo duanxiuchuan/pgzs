@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*",allowCredentials="true",allowedHeaders = "",methods = {})
 @RequestMapping("/pgzs/case")
 public class CaseController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(CaseController.class);

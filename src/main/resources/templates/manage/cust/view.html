@@ -86,6 +86,14 @@
                 <input th:type="text" th:id="area" th:name="area" th:value="${cust.area}" autocomplete="off" class="layui-input">
             </div>
         </div>
+        <div class="layui-form-item">
+            <label th:for="type" class="layui-form-label">
+                留言
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="msg" th:name="msg" th:value="${cust.msg}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
     </form>
 </div>
 <script>

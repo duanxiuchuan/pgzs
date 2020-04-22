@@ -93,6 +93,11 @@ public class ManageWikiController extends BaseController {
         request.setAttribute("wikiList",wikiList);
         Wiki wiki = wikiService.findById(wikiId);
         request.setAttribute("wiki",wiki);
+        //每次点击 +1
+       /* String clicks = wiki.getClicks();
+        Integer click = Integer.parseInt(clicks)+1;
+        wiki.setClicks(click.toString());
+        wikiService.update(wiki);*/
         return "manage/wiki/view";
     }
 

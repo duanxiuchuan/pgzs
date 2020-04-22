@@ -72,7 +72,14 @@
                     , {field: 'houseName', title: "楼盘名称"}
                     , {field: 'area', title: "面积"}
                     , {field: 'designerName', title: "设计师"}
-                    , {field: 'status', title: "是否有效"}
+                    , {field: 'status', title: "是否有效",templet: function (res){
+                        if (res.status == 1){
+                            return "有效";
+                        }else{
+                            return "无效";
+                        }
+                    }}
+                    , {field: 'msg', title: "留言"}
                     , {field: 'createTime', title: "预约时间"}
                     , {fixed: 'right', title: "[[#{admin.common.action}]]", toolbar: '#barDemo', width: 200}
 

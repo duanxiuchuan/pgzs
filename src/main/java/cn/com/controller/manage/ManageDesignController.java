@@ -115,6 +115,12 @@ public class ManageDesignController extends BaseController {
         request.setAttribute("designerList",designerList);
         request.setAttribute("styleList",styleList);
         Designer designer = designerService.findById(designerId);
+        //每次查询 点击率+1
+       /* String clicks = designer.getClicks();
+        Integer click = Integer.parseInt(clicks)+1;
+        designer.setClicks(click.toString());
+        designerService.update(designer);
+        Designer result = designerService.findById(designerId);*/
         request.setAttribute("designer",designer);
         return "manage/designer/view";
     }
