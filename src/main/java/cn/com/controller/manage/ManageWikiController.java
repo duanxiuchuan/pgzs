@@ -91,13 +91,15 @@ public class ManageWikiController extends BaseController {
         //查询百科类型
         List<Dict> wikiList = dictService.findByType(DictConstantType.ADMIN_WIKI_TYPE);
         request.setAttribute("wikiList",wikiList);
-        Wiki wiki = wikiService.findById(wikiId);
-        request.setAttribute("wiki",wiki);
+        Wiki wiki = wikiService.findByIdOne(wikiId);
+
         //每次点击 +1
-       /* String clicks = wiki.getClicks();
+         String clicks = wiki.getClicks();
         Integer click = Integer.parseInt(clicks)+1;
         wiki.setClicks(click.toString());
-        wikiService.update(wiki);*/
+        wikiService.update(wiki);
+        Wiki result = wikiService.findById(wikiId);
+        request.setAttribute("wiki",result);
         return "manage/wiki/view";
     }
 

@@ -21,4 +21,6 @@ public interface DesignerService extends BaseService<Designer> {
     void deleteByDesignerId(String caseId);
 
     List<Designer> findAllByStatus();
+
+    Designer findByIdOne(String designerId);
 }

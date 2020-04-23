@@ -16,6 +16,7 @@ import cn.com.utils.StringUtils;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.URLEncoder;
+import java.net.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -48,7 +50,15 @@ public class CommonController {
     private RedisService redisService;
     @Autowired
     private DictService dictService;
+    @Value("${file-save-path}")
+    private String fileSavePath;
+    @Value("${nginx-file-admin-url}")
+    private String adminurl;
 
+    /**
+     * 时间格式化
+     */
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd/");
     /**
      * 获取省级数据
      */
@@ -80,11 +90,12 @@ public class CommonController {
      */
     @RequestMapping(value = "/fileUploads")
     @ResponseBody
-    public JsonResult fileUploads(@RequestParam("file") MultipartFile[] files){
+    public JsonResult fileUploads(@RequestParam("file") MultipartFile[] files,HttpServletRequest request){
         List<Map<String,Object>> data = new ArrayList<>();
+//        String ip = getIp(request);
         try {
             for (MultipartFile file : files ) {
-                Map<String, Object> map = parseFile(file);
+                Map<String, Object> map = parseFile(file,request);
                 data.add(map);
             }
             return JsonResult.success("文件上传成功",data);
@@ -94,37 +105,37 @@ public class CommonController {
         return JsonResult.error("文件上传失败",null);
     }
 
-    private Map<String,Object> parseFile(MultipartFile file)throws IOException {
+    private Map<String,Object> parseFile(MultipartFile file,HttpServletRequest request)throws IOException {
         Map<String,Object> map = new HashMap<>();
-        // 获取文件名
-        String fileRealName = file.getOriginalFilename();
-        map.put("oldName",fileRealName);
-
-        int pointIndex = fileRealName.lastIndexOf(".");
-        // 截取文件后缀
-        String fileSuffix = fileRealName.substring(pointIndex);
-
-        String tempPath = getFilePath(fileSuffix);
-
-        //生成文件的前缀包含连字符
-        String fileId = UUID.randomUUID().toString().replace("-", "");
-        String savedFileName = fileId.concat(fileSuffix);
-        map.put("newName",savedFileName);
-        File path = new File(ResourceUtils.getURL("classpath:").getPath());
-        if (!path.exists()) {
-            path = new File("");
+        //1.后半段目录：  2020/03/15
+        String directory = simpleDateFormat.format(new Date());
+        /**
+         *  2.文件保存目录  E:/images/2020/03/15/
+         *  如果目录不存在，则创建
+         */
+        map.put("oldName",file.getName());
+        File dir = new File(fileSavePath + directory);
+        if (!dir.exists()) {
+            dir.mkdirs();
         }
-        File upload = new File(path.getAbsolutePath(), "static"+tempPath);
-        if (!upload.exists()) {
-            upload.mkdirs();
+        log.info("图片上传，保存位置：" + fileSavePath + directory);
+        //3.给文件重新设置一个名字
+        //后缀
+        String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+        String newFileName= UUID.randomUUID().toString().replaceAll("-", "")+suffix;
+        map.put("newName",newFileName);
+        //4.创建这个新文件
+        File newFile = new File(fileSavePath + directory + newFileName);
+        //5.复制操作
+        try {
+            file.transferTo(newFile);
+            //协议 :// ip地址 ：端口号 / 文件目录(/images/2020/03/15/xxx.jpg)
+            String url =  adminurl + "/admin/images/" + directory + newFileName;
+            log.info("图片上传，访问URL：" + url);
+            map.put("path",url);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        File savedFile = new File(upload.getAbsolutePath(), savedFileName);
-        boolean isCreateSuccess = savedFile.createNewFile();
-        if (isCreateSuccess) {
-            file.transferTo(savedFile);  //转存文件
-        }
-        map.put("path",tempPath+savedFileName);
         return map;
     }
 
@@ -160,11 +171,12 @@ public class CommonController {
      */
     @RequestMapping(value = "/richImg")
     @ResponseBody
-    public Map richImg(@RequestParam("file") MultipartFile[] files){
+    public Map richImg(@RequestParam("file") MultipartFile[] files,HttpServletRequest request){
         Map<String, Object> map = new HashMap<>();
+//        String ip = getIp(request);
         try {
             for (MultipartFile file : files ) {
-                map = parseFile(file);
+                map = parseFile(file,request);
             }
             Map data = new HashMap();
             data.put("src",map.get("path"));
@@ -269,5 +281,24 @@ public class CommonController {
         }
 
         return JsonResult.success("success",list);
+    }
+
+    public static String getIp(HttpServletRequest request){
+        try {
+            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (networkInterfaces.hasMoreElements()) {
+                NetworkInterface ni = (NetworkInterface) networkInterfaces.nextElement();
+                Enumeration<InetAddress> nias = ni.getInetAddresses();
+                while (nias.hasMoreElements()) {
+                    InetAddress ia = (InetAddress) nias.nextElement();
+                    if (!ia.isLinkLocalAddress() && !ia.isLoopbackAddress() && ia instanceof Inet4Address) {
+                        return ia.toString();
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            System.out.println("Fail to get currentIp.");
+        }
+        return null;
     }
 }

@@ -10,7 +10,7 @@
     <div class="page-title" style="font-size: 14px">
         <label th:text="#{admin.role.roleManager}"></label>
         <span class="fr">
-            <button shiro:hasPermission="/manage/role/save" id="add" class="layui-btn layui-btn-normal">
+            <button shiro:hasPermission="/admin/manage/role/save" id="add" class="layui-btn layui-btn-normal">
                 <i class="layui-icon layui-icon-add-1"></i><th:block th:text="#{admin.role.addRole}"></th:block>
             </button>
         </span>
@@ -24,10 +24,10 @@
                         <label th:text="${role.name}"></label>
                         <span class="fr hover">
                             <label th:text="${role.isBuiltIn == 0} ? #{admin.role.systemDefault}"></label>
-                            <a shiro:hasPermission="/manage/role/update" href="#" th:value="${role.id}"
+                            <a shiro:hasPermission="/admin/manage/role/update" href="#" th:value="${role.id}"
                                th:title="#{admin.common.update}" th:rolename="${role.name}" class="update"
                                th:if="${role.isBuiltIn != 0}"><i class="layui-icon layui-icon-edit"></i></a>
-                            <a shiro:hasPermission="/manage/role/delete" href="#" th:value="${role.id}"
+                            <a shiro:hasPermission="/admin/manage/role/delete" href="#" th:value="${role.id}"
                                th:title="#{admin.common.delete}" th:rolename="${role.name}" class="del"
                                th:if="${role.isBuiltIn != 0}"><i class="layui-icon layui-icon-delete"></i></a>
                         </span>
@@ -46,7 +46,7 @@
 	var defaultId = $(".active").attr("data-id");
 	loadRoleResources(defaultId);
     function loadRoleResources(roleId) {
-        document.getElementById("topFrame").src = "/manage/role/loadRoleResources?roleId=" + roleId;
+        document.getElementById("topFrame").src = "/admin/manage/role/loadRoleResources?roleId=" + roleId;
     }
 
     layui.use(['element', 'form'], function () {
@@ -73,7 +73,7 @@
                 btn: ['确定', '取消'] //按钮
             }, function () {
                 $.ajax({
-                    url: "/manage/role/delete",
+                    url: "/admin/manage/role/delete",
                     type: "POST",
                     data: {
                         roleId: roleId
@@ -116,7 +116,7 @@
                         return false;
                     }
                     $.ajax({
-                        url: "/manage/role/update",
+                        url: "/admin/manage/role/update",
                         type: "POST",
                         data: {
                             id: roleId,
@@ -152,7 +152,7 @@
                         return false;
                     }
                     $.ajax({
-                        url: "/manage/role/save",
+                        url: "/admin/manage/role/save",
                         type: "POST",
                         data: {
                             name: roleName

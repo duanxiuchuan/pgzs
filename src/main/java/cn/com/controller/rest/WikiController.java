@@ -62,8 +62,15 @@ public class WikiController extends BaseController {
     @PostMapping("/view")
     public JsonResult view(HttpServletRequest request, @RequestBody String params) {
         Wiki wiki1 = JSONObject.parseObject(params, Wiki.class);
-        Wiki wiki = wikiService.findById(wiki1.getWikiId());
-        return JsonResult.success("操作成功", wiki);
+        Wiki wiki = wikiService.findByIdOne(wiki1.getWikiId());
+
+        //每次点击 +1
+        String clicks = wiki.getClicks();
+        Integer click = Integer.parseInt(clicks)+1;
+        wiki.setClicks(click.toString());
+        wikiService.update(wiki);
+        Wiki result = wikiService.findById(wiki1.getWikiId());
+        return JsonResult.success("操作成功", result);
     }
 
 

@@ -87,7 +87,7 @@
 
         layedit.set({	//设置图片接口
             uploadImage: {
-                url: '/admin/common/richImg', //接口url
+                url: '/admin/admin/common/richImg', //接口url
                 type: 'post'
             }
         });
@@ -109,7 +109,7 @@
 
         form.on("submit(formSubmit)", function (data) {
             params = data.field;
-            $.post("/manage/case/update", params, function (data) {
+            $.post("/admin/manage/case/update", params, function (data) {
                 if (data.status == 200) {
                     parent.layer.msg(data.result, {time: 2000, icon: 1}, function () {
                         // 父页面刷新

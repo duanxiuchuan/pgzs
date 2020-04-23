@@ -94,7 +94,7 @@
 
 <script>
     layui.config({
-        base: '/definModule/'
+        base: '/admin/definModule/'
     }).use(['form', 'layer','dictSelect'], function () {
         $ = layui.jquery;
         var form = layui.form
@@ -117,7 +117,7 @@
             });
             //  替换 data.field.foodId的数据为拼接后的字符串
             params.style = arr.join(",");//将数组合并成字符串
-            $.post("/manage/design/update", params, function (data) {
+            $.post("/admin/manage/design/update", params, function (data) {
                 if (data.status == 400) {
                     layer.msg(data.result, {time: 2000, icon: 5});
                     $("#submit").prop("disabled", false);
@@ -143,12 +143,12 @@
 
         var uploadInst = upload.render({
             elem: "#test1",
-            url: "/admin/common/richImg",
+            url: "/admin/admin/common/richImg",
             done: function (res)
             {
                 console.log(res);
-                layui.$("#test2").attr('src', 'http://localhost' + res.data.src);
-                layui.$("#test2").attr('value','http://localhost'+ res.data.src);
+                layui.$("#test2").attr('src',  res.data.src);
+                layui.$("#test2").attr('value', res.data.src);
                 layer.msg("上传成功", {time: 2000, icon: 6});
             },
             error: function ()

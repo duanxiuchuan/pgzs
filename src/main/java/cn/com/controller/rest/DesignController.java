@@ -71,9 +71,14 @@ public class DesignController extends BaseController {
     @PostMapping("/view")
     public JsonResult view(HttpServletRequest request, @RequestBody String params) {
         Designer desig = JSONObject.parseObject(params, Designer.class);
-
-        Designer designer = designerService.findById(desig.getDesignerId());
-        return JsonResult.success("操作成功", designer);
+        Designer designer = designerService.findByIdOne(desig.getDesignerId());
+        //每次查询 点击率+1
+        String clicks = designer.getClicks();
+        Integer click = Integer.parseInt(clicks)+1;
+        designer.setClicks(click.toString());
+        designerService.update(designer);
+        Designer result = designerService.findById(desig.getDesignerId());
+        return JsonResult.success("操作成功", result);
     }
 
 

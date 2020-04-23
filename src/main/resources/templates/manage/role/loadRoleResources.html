@@ -45,7 +45,7 @@
             , layer = layui.layer;
         form.on('checkbox(resources)', function (data) {
             $.ajax({
-                url: "/manage/role/saveRoleResourcs",
+                url: "/admin/manage/role/saveRoleResourcs",
                 type: "POST",
                 data: {
                     roleId: $("#roleId").val(),

@@ -70,7 +70,7 @@
 </div>
 <script>
     layui.config({
-        base: '/definModule/'
+        base: '/admin/definModule/'
     }).use(['form', 'layer','dictSelect'], function () {
         $ = layui.jquery;
         var form = layui.form
@@ -86,7 +86,7 @@
         form.on('submit(edit)', function (data) {
             $("#form").find("button").prop("disabled", true);
             params = data.field;
-            $.post("/manage/dict/update", params, function (data) {
+            $.post("/admin/manage/dict/update", params, function (data) {
                 if (data.status == 0) {
                     layer.msg(data.result, {time: 2000, icon: 5});
                     $("#submit").prop("disabled", false);

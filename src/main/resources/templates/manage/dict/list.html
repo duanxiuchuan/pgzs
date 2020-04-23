@@ -22,11 +22,11 @@
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
 
-        <button shiro:hasPermission="/manage/dict/delete" class="layui-btn layui-btn-sm layui-btn-danger" onclick="delAll()">
+        <button shiro:hasPermission="/admin/manage/dict/delete" class="layui-btn layui-btn-sm layui-btn-danger" onclick="delAll()">
             <i class="layui-icon"></i>
             <th:block th:text="#{admin.common.batchDelete}"></th:block>
         </button>
-        <button shiro:hasPermission="/manage/dict/add" class="layui-btn layui-btn-sm" onclick="add()">
+        <button shiro:hasPermission="/admin/manage/dict/add" class="layui-btn layui-btn-sm" onclick="add()">
             <i class="layui-icon"></i>
             <label th:text="#{admin.common.addDict}"></label>
         </button>
