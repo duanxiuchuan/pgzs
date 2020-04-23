@@ -14,7 +14,7 @@ public class MyFilter implements Filter{
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         HttpServletResponse res = (HttpServletResponse) response;
-        System.out.println("我来了我是拦截器");
+//        System.out.println("我来了我是拦截器");
         res.addHeader("Access-Control-Allow-Credentials", "true");
         res.addHeader("Access-Control-Allow-Origin", "*");
         res.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
