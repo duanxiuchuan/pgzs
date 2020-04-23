@@ -48,6 +48,10 @@
 	</div>
 	<script type="text/javascript" src="/admin/manage//layui.js"></script>
 	<script type="text/javascript">
+        $(document).ready(
+            function() {
+                $("body").css("background-image","url(" + "/admin/static/images/bg.png ");
+            });
 	layui.use(['layer','form'], function(){ //独立版的layer无需执行这一句
   		var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
   		
