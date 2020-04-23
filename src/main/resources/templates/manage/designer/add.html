@@ -93,7 +93,7 @@
 
 <script>
     layui.config({
-        base: '/definModule/'
+        base: '/admin/definModule/'
     }).use(['form', 'layer','dictSelect'], function () {
         $ = layui.jquery;
         var form = layui.form
@@ -142,12 +142,12 @@
 
         var uploadInst = upload.render({
             elem: "#test1",
-            url: "/admin/common/richImg",
+            url: "/admin/admin/common/richImg",
             done: function (res)
             {
                 console.log(res);
-                layui.$("#test2").attr('src', 'http://localhost' + res.data.src);
-                layui.$("#test2").attr('value','http://localhost'+ res.data.src);
+                layui.$("#test2").attr('src', res.data.src);
+                layui.$("#test2").attr('value',res.data.src);
                 layer.msg("上传成功", {time: 2000, icon: 6});
 
             },

@@ -119,7 +119,7 @@
                 data.field.isEnable = 1;
             }
             params = data.field;
-            $.post("/manage/manage/update", params, function (data) {
+            $.post("/admin/manage/manage/update", params, function (data) {
             	if (data.status == 200) {
                     layer.msg(data.result, {time: 2000, icon: 1}, function () {
                           // 父页面刷新

@@ -21,7 +21,7 @@
 
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <a shiro:hasPermission="/manage/manage/addPage" class="layui-btn layui-btn-sm" onclick="add()" href="javascript:void(0)">
+        <a shiro:hasPermission="/admin/manage/manage/addPage" class="layui-btn layui-btn-sm" onclick="add()" href="javascript:void(0)">
             <i class="layui-icon"></i>
             <label th:text="#{admin.common.add}"></label>
         </a>
@@ -32,8 +32,8 @@
 </script>
 
 <script type="text/html" id="barDemo">
-    <a shiro:hasPermission="/manage/manage/editPage" class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a shiro:hasPermission="/manage/manage/delete" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <a shiro:hasPermission="/admin/manage/manage/editPage" class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a shiro:hasPermission="/admin/manage/manage/delete" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="view">查看</a>
 </script>
 
@@ -52,7 +52,7 @@
         var table = layui.table;
         table.render({
             elem: '#tableData'
-            , url: '/manage/manage/listData?deptId=' + deptId
+            , url: '/admin/manage/manage/listData?deptId=' + deptId
             , toolbar: '#toolbarDemo'
             , title: '用户数据表'
             , cols: [

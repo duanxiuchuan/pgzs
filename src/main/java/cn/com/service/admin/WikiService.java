@@ -17,4 +17,6 @@ public interface WikiService extends BaseService<Wiki> {
     void update(Wiki wiki);
 
     void deleteByWikiId(String wikiId);
+
+    Wiki findByIdOne(String wikiId);
 }

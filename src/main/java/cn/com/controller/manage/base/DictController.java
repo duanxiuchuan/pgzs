@@ -77,6 +77,11 @@ public class DictController extends BaseController {
         try {
             Admin admin = adminService.getCurrent();
             dict = dictService.save(dict, admin);
+            //查询类型与值 是否已经占用
+            Dict disct2 = dictService.findByTypeAndValue(dict.getType(),dict.getValue());
+            if(disct2 != null){
+                return super.messageResult(i18nMessage.getMessage("admin.common.systemMsg"), false);
+            }
             Long id = dictService.saveModel(dict);
             if (id > 0L) {
                 redisService.remove(dict.getType());

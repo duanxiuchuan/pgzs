@@ -15,7 +15,7 @@
                 <th:block th:text="#{admin.common.refresh}"></th:block>
             </button>
         </span>
-        <span class="fr" shiro:hasPermission="/manage/res/addcategory">
+        <span class="fr" shiro:hasPermission="/admin/manage/res/addcategory">
             <button onclick="add0()" class="layui-btn layui-btn-normal" style="margin: 5px">
                 <i class="layui-icon layui-icon-add-1"></i>新建
             </button>
@@ -58,13 +58,13 @@
                 </td>
 
                 <td class="td-manage">
-                    <button shiro:hasPermission="/manage/res/editPage" class="layui-btn layui-btn layui-btn-xs" th:onclick="'edit(' + ${topRes.id} + ')'">
+                    <button shiro:hasPermission="/admin/manage/res/editPage" class="layui-btn layui-btn layui-btn-xs" th:onclick="'edit(' + ${topRes.id} + ')'">
                     	<i class="layui-icon">&#xe642;</i>编辑
                     </button>
-                    <button shiro:hasPermission="/manage/res/delete" class="layui-btn-danger layui-btn layui-btn-xs" th:onclick="'res_del(this,' + ${topRes.id} + ')'" href="javascript:;">
+                    <button shiro:hasPermission="/admin/manage/res/delete" class="layui-btn-danger layui-btn layui-btn-xs" th:onclick="'res_del(this,' + ${topRes.id} + ')'" href="javascript:;">
                     	<i class="layui-icon">&#xe640;</i>删除
                     </button>
-                    <button shiro:hasPermission="/manage/res/addsubord" class="layui-btn layui-btn-warm layui-btn-xs" th:onclick="'add(' + ${topRes.id} + ')'">
+                    <button shiro:hasPermission="/admin/manage/res/addsubord" class="layui-btn layui-btn-warm layui-btn-xs" th:onclick="'add(' + ${topRes.id} + ')'">
                     	<i class="layui-icon">&#xe642;</i>添加下级权限
                     </button>
                 </td>
@@ -94,14 +94,14 @@
                         </td>
 
                         <td class="td-manage">
-                            <button shiro:hasPermission="/manage/res/editPage" class="layui-btn layui-btn layui-btn-xs" th:onclick="'edit(' + ${secordRes.id} + ')'">
+                            <button shiro:hasPermission="/admin/manage/res/editPage" class="layui-btn layui-btn layui-btn-xs" th:onclick="'edit(' + ${secordRes.id} + ')'">
                             	<i class="layui-icon">&#xe642;</i>编辑
                             </button>
-                            <button shiro:hasPermission="/manage/res/delete" class="layui-btn-danger layui-btn layui-btn-xs" th:onclick="'res_del(this,' + ${secordRes.id} + ')'" href="javascript:;">
+                            <button shiro:hasPermission="/admin/manage/res/delete" class="layui-btn-danger layui-btn layui-btn-xs" th:onclick="'res_del(this,' + ${secordRes.id} + ')'" href="javascript:;">
                             	<i class="layui-icon">&#xe640;</i>删除
                             </button>
                             <th:block th:if="${secordRes.type != 2}">
-                                <button shiro:hasPermission="/manage/res/addsubord" class="layui-btn layui-btn-warm layui-btn-xs" th:onclick="'add(' + ${secordRes.id} + ')'">
+                                <button shiro:hasPermission="/admin/manage/res/addsubord" class="layui-btn layui-btn-warm layui-btn-xs" th:onclick="'add(' + ${secordRes.id} + ')'">
                                 	<i class="layui-icon">&#xe642;</i>添加下级权限
                                 </button>
                             </th:block>
@@ -133,11 +133,11 @@
                                     	<i class="layui-icon">&#xe642;</i>编辑
                                     </button>
                                     <th:block th:if="${lastRes.type != 2}">
-                                        <button shiro:hasPermission="/manage/res/addsubord" class="layui-btn layui-btn-warm layui-btn-xs" th:onclick="'add(' + ${lastRes.id} + ')'">
+                                        <button shiro:hasPermission="/admin/manage/res/addsubord" class="layui-btn layui-btn-warm layui-btn-xs" th:onclick="'add(' + ${lastRes.id} + ')'">
                                         	<i class="layui-icon">&#xe642;</i>添加下级权限
                                         </button>
                                     </th:block>
-                                    <button shiro:hasPermission="/manage/res/delete" class="layui-btn-danger layui-btn layui-btn-xs" th:onclick="'res_del(this,' + ${lastRes.id} + ')'" href="javascript:;">
+                                    <button shiro:hasPermission="/admin/manage/res/delete" class="layui-btn-danger layui-btn layui-btn-xs" th:onclick="'res_del(this,' + ${lastRes.id} + ')'" href="javascript:;">
                                     	<i class="layui-icon">&#xe640;</i>删除
                                     </button>
                                 </td>
@@ -185,7 +185,7 @@
         }, function () {
         	console.log("qudha")
         	$.ajax({
-                url: "/manage/res/delete",
+                url: "/admin/manage/res/delete",
                 type: "POST",
                 data: {
                     id: id

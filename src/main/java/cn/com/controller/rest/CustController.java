@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*",allowCredentials="true",allowedHeaders = "",methods = {})
 @RequestMapping("/pgzs/cust")
 public class CustController extends BaseController {
 

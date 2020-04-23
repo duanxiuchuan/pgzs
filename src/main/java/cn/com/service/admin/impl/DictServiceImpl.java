@@ -76,4 +76,9 @@ public class DictServiceImpl extends BaseServiceImpl<Dict> implements DictServic
          List<Dict> dictList = dictDao.findByType(type);
          return dictList;
     }
+
+    @Override
+    public Dict findByTypeAndValue(String type, String value) {
+        return dictDao.findByTypeAndValue(type,value);
+    }
 }

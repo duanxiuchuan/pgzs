@@ -38,4 +38,6 @@ public interface DictDao extends BaseDao<Dict> {
 	List<Dict> findByType(@Param("type") String type);
 
     int deleteByDictId(@Param("dictId")Long dictId);
+
+    Dict findByTypeAndValue(@Param("type")String type, @Param("value")String value);
 }

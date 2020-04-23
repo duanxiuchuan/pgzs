@@ -101,6 +101,14 @@
                 <input th:type="text" th:id="area" th:name="area"  autocomplete="off" class="layui-input">
             </div>
         </div>
+        <div class="layui-form-item">
+            <label th:for="type" class="layui-form-label">
+                留言
+            </label>
+            <div class="layui-input-inline">
+                <input th:type="text" th:id="msg" th:name="msg"  autocomplete="off" class="layui-input">
+            </div>
+        </div>
 
         <div class="layui-form-item">
             <button class="layui-btn" lay-submit="" lay-filter="add">增加</button>
@@ -109,7 +117,7 @@
 </div>
 <script>
     layui.config({
-        base: '/definModule/'
+        base: '/admin/definModule/'
     }).use(['form', 'layer','dictSelect'], function () {
         $ = layui.jquery;
         var form = layui.form

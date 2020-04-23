@@ -3,7 +3,7 @@
 
 <div th:replace="manage/common/header :: header"></div>
 
-<link rel="stylesheet" href="/manage/css/layui.css">
+<link rel="stylesheet" href="/admin/manage/css/layui.css">
 
 <style>
 .sel_btn {
@@ -46,8 +46,12 @@
 			</span>
 		</form>
 	</div>
-	<script type="text/javascript" src="/manage/layui.js"></script>
+	<script type="text/javascript" src="/admin/manage//layui.js"></script>
 	<script type="text/javascript">
+        $(document).ready(
+            function() {
+                $("body").css("background-image","url(" + "/admin/static/images/bg.png ");
+            });
 	layui.use(['layer','form'], function(){ //独立版的layer无需执行这一句
   		var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
   		
@@ -65,7 +69,7 @@
 		    $("#submit").attr("disabled", true);
 		    $.ajax({
 				type : "POST",
-				url : "/manage/submit",
+				url : "/admin/manage/submit",
 				data : $('#loginform').serialize(),
 				dataType : "json",
 				success : function(data) {
@@ -75,7 +79,7 @@
 							icon : 1
 						});
 						setTimeout(function() {
-							location.href = '/manage/index';
+							location.href = '/admin/manage/index';
 						}, 2000);
 					} else {
 						layer.msg(data.result, {

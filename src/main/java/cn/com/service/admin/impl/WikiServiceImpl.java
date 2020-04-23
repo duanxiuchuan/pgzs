@@ -1,6 +1,7 @@
 package cn.com.service.admin.impl;
 
 import cn.com.dao.admin.WikiDao;
+import cn.com.dao.base.BaseDao;
 import cn.com.entity.admin.Wiki;
 import cn.com.service.admin.WikiService;
 import org.beetl.sql.core.engine.PageQuery;
@@ -12,6 +13,8 @@ public class WikiServiceImpl extends BaseServiceImpl<Wiki> implements WikiServic
 
     @Autowired
     private WikiDao wikiDao;
+    @Autowired
+    private BaseDao<Wiki> baseDao;
     @Override
     public PageQuery<Wiki> findPage(PageQuery<Wiki> query) {
         PageQuery<Wiki> ret = wikiDao.findPage(query);
@@ -32,5 +35,10 @@ public class WikiServiceImpl extends BaseServiceImpl<Wiki> implements WikiServic
     @Override
     public void deleteByWikiId(String wikiId) {
         wikiDao.deleteByWikiId(wikiId);
+    }
+
+    @Override
+    public Wiki findByIdOne(String wikiId) {
+        return baseDao.single(wikiId);
     }
 }

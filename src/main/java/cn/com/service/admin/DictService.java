@@ -48,4 +48,6 @@ public interface DictService extends BaseService<Dict> {
     int deleteByDictId(Long dictId);
 
     List<Dict> findByType(String type);
+
+    Dict findByTypeAndValue(String type, String value);
 }

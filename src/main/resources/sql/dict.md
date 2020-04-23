@@ -28,3 +28,9 @@ deleteByDictId
 ===
 * 逻辑删除
 update sys_dict set del_flag = 0 where del_flag =1 and dict_id = #dictId#
+
+
+findByTypeAndValue
+===
+* 查询类型和值是否被占用
+select * from sys_dict where del_flag =1 and type = #type# and value = #value#

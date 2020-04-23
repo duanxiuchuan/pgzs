@@ -61,6 +61,7 @@ public class Customer extends BaseEntity<Customer> implements Serializable {
 	private Date createTime ;
 	private String designerId;
 	private String designerName;
+	private String msg;
 	public Customer() {
 	}
 
