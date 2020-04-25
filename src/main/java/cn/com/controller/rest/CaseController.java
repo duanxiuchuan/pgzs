@@ -15,6 +15,10 @@ import cn.com.service.admin.HeatAreasService;
 import cn.com.utils.StringUtils;
 import cn.com.utils.UUIDUtil;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.beetl.sql.core.engine.PageQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +31,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*",allowCredentials="true",allowedHeaders = "",methods = {})
+@Api(tags = "经典案例相关Api",value = "经典案例相关Api")
 @RequestMapping("/pgzs/case")
 public class CaseController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(CaseController.class);
@@ -45,6 +50,13 @@ public class CaseController extends BaseController {
 
     @PostMapping("list")
     @ResponseBody
+    @ApiOperation(value = "经典案例",notes ="经典案例列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "areasName",value = "小区名称",dataType = "String"),
+            @ApiImplicitParam(name = "page",value = "当前页",dataType = "String"),
+            @ApiImplicitParam(name = "limit",value = "每页条数",dataType = "String"),
+            @ApiImplicitParam(name = "style",value = "风格",dataType = "String")
+    })
     public ResultMap<Case> listData(HttpServletRequest request,
                                         @RequestParam(name = "page", required = false, defaultValue = "1") int page,
                                         @RequestParam(name = "limit", required = false, defaultValue = "10") int limit,
@@ -59,7 +71,7 @@ public class CaseController extends BaseController {
             query.setPara("style", cass.getStyle());
         }
         query = caseService.findPage(query);
-        ResultMap<Case> resultMap = new ResultMap<>(query.getList(), query.getTotalRow());
+        ResultMap<Case> resultMap = new ResultMap<>(query.getList(), query.getTotalRow(),page,limit);
         return resultMap;
     }
 
@@ -72,6 +84,10 @@ public class CaseController extends BaseController {
      * @return
      */
     @PostMapping("/view")
+    @ApiOperation(value = "经典案例",notes ="经典案例")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "caseId",value = "案例id",dataType = "String")
+    })
     public JsonResult view(HttpServletRequest request, @RequestBody String params) {
         Case cass = JSONObject.parseObject(params, Case.class);
         Case aCase = caseService.findById(cass.getCaseId());

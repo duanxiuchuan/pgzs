@@ -9,6 +9,10 @@ import cn.com.entity.admin.Admin;
 import cn.com.entity.base.Dict;
 import cn.com.service.admin.DictService;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.beetl.sql.core.engine.PageQuery;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,7 @@ import java.util.Map;
  */
 @RestController
 @CrossOrigin(origins = "*",allowCredentials="true",allowedHeaders = "",methods = {})
+@Api(tags = "数据字典相关Api",value = "数据字典相关Api")
 @RequestMapping("/pgzs/dict")
 public class RestDictController extends BaseController {
     @Log
@@ -45,13 +50,18 @@ public class RestDictController extends BaseController {
 
     @ResponseBody
     @PostMapping("/listData")
+    @ApiOperation(value = "数据字典",notes ="数据字典列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page",value = "当前页",dataType = "String"),
+            @ApiImplicitParam(name = "limit",value = "每页条数",dataType = "String")
+    })
     public ResultMap<Dict> listData(HttpServletRequest request,
                                     @RequestParam(name = "page", required = false, defaultValue = "1") int page,
                                     @RequestParam(name = "limit", required = false, defaultValue = "10") int limit) {
         PageQuery query = new PageQuery(page, limit);
 
         dictService.findAll(query);
-        ResultMap<Dict> resultMap = new ResultMap<>(query.getList(), query.getTotalRow());
+        ResultMap<Dict> resultMap = new ResultMap<>(query.getList(), query.getTotalRow(),page,limit);
         return resultMap;
     }
 
@@ -63,6 +73,10 @@ public class RestDictController extends BaseController {
      * @return
      */
     @PostMapping("/view")
+    @ApiOperation(value = "数据字典",notes ="数据字典类型详情")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "type",value = "字典类型",dataType = "String")
+    })
     public JsonResult view(HttpServletRequest request,  @RequestBody String params) {
         Dict dict1 = JSONObject.parseObject(params, Dict.class);
         List<Dict> dictList = dictService.findByType(dict1.getType());

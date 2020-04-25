@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.ResponseEntity;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -29,14 +31,15 @@ public class SwaggerConfig {
     @Bean
     public Docket restfulApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("RestfulApi")
-                .genericModelSubstitutes(ResponseEntity.class)
-                .useDefaultResponseMessages(true)
-                .forCodeGeneration(false)
+//                .groupName("RestfulApi")
+//                .genericModelSubstitutes(ResponseEntity.class)
+//                .useDefaultResponseMessages(true)
+//                .forCodeGeneration(false)
                 // base，最终调用接口后会和paths拼接在一起
-                .pathMapping(pathMapping)
+//                .pathMapping(pathMapping)
                 .select()
-                .paths(doFilteringRules())
+                .paths(PathSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("cn.com.controller.rest"))
                 .build()
                 .apiInfo(apiInfo());
     }
@@ -46,13 +49,13 @@ public class SwaggerConfig {
      * 这里的过滤规则支持正则匹配
      * @return
      */
-    private Predicate<String> doFilteringRules() {
+    /*private Predicate<String> doFilteringRules() {
         return or(
                 regex("/wap.*"),
                 regex("/app.*")
         );
     }
-
+*/
 
     /**
      * 构建 api文档的详细信息函数
@@ -62,11 +65,12 @@ public class SwaggerConfig {
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder()
 				//页面标题
-				.title("lota_coin项目api")
+				.title("品功装饰系统")
 				//版本号
 				.version("1.0")
+//                .termsOfServiceUrl()
 				//描述
-				.description("API 描述")
+				.description("品功装饰系统API")
 				.build();
 	}
 

@@ -5,10 +5,7 @@ import cn.com.common.message.JsonResult;
 import cn.com.common.result.ResultMap;
 import cn.com.controller.manage.ManageDeptController;
 import cn.com.controller.manage.base.BaseController;
-import cn.com.entity.admin.Admin;
-import cn.com.entity.admin.Customer;
-import cn.com.entity.admin.Designer;
-import cn.com.entity.admin.HeatAreas;
+import cn.com.entity.admin.*;
 import cn.com.entity.base.Dict;
 import cn.com.service.admin.CustService;
 import cn.com.service.admin.DesignerService;
@@ -17,6 +14,10 @@ import cn.com.service.admin.HeatAreasService;
 import cn.com.utils.StringUtils;
 import cn.com.utils.UUIDUtil;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.beetl.sql.core.engine.PageQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*",allowCredentials="true",allowedHeaders = "",methods = {})
+@Api(tags = "客户管理相关Api",value = "客户管理相关Api")
 @RequestMapping("/pgzs/cust")
 public class CustController extends BaseController {
 
@@ -64,6 +66,33 @@ public class CustController extends BaseController {
             e.printStackTrace();
             return JsonResult.error("系统异常", null);
         }
+    }
+
+    @PostMapping("list")
+    @ResponseBody
+    @ApiOperation(value = "客户管理",notes ="客户管理列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name",value = "客户名称",dataType = "String"),
+            @ApiImplicitParam(name = "page",value = "当前页",dataType = "String"),
+            @ApiImplicitParam(name = "limit",value = "每页条数",dataType = "String"),
+            @ApiImplicitParam(name = "phone",value = "电话号码",dataType = "String")
+    })
+    public ResultMap<Customer> listData(HttpServletRequest request,
+                                    @RequestParam(name = "page", required = false, defaultValue = "1") int page,
+                                    @RequestParam(name = "limit", required = false, defaultValue = "10") int limit,
+                                    @RequestBody String params) {
+
+        Customer customer = JSONObject.parseObject(params, Customer.class);
+        PageQuery<Customer> query = new PageQuery<>(page, limit);
+        if (StringUtils.isNotEmpty(customer.getName())) {
+            query.setPara("name", customer.getName());
+        }
+        if (StringUtils.isNotEmpty(customer.getPhone())) {
+            query.setPara("phone", customer.getPhone());
+        }
+        query = custService.findPage(query);
+        ResultMap<Customer> resultMap = new ResultMap<>(query.getList(), query.getTotalRow(),page,limit);
+        return resultMap;
     }
 
 }

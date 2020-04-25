@@ -53,7 +53,7 @@ public class AreaController extends BaseController {
             query.setPara("name",name);
         }
         query = areaService.findAll(query);
-        ResultMap<Area> resultMap = new ResultMap<>(query.getList(), query.getTotalRow());
+        ResultMap<Area> resultMap = new ResultMap<>(query.getList(), query.getTotalRow(),page,limit);
         return resultMap;
     }
 }

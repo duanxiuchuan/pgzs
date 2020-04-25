@@ -12,6 +12,10 @@ import cn.com.service.admin.HeatAreasService;
 import cn.com.utils.StringUtils;
 import cn.com.utils.UUIDUtil;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.beetl.sql.core.engine.PageQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +28,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*",allowCredentials="true",allowedHeaders = "",methods = {})
+@Api(tags = "热门小区相关Api",value = "热门小区相关Api")
 @RequestMapping("/pgzs/heat")
 public class HeatAreasController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(ManageCaseController.class);
@@ -38,6 +43,13 @@ public class HeatAreasController extends BaseController {
 
     @PostMapping("list")
     @ResponseBody
+    @ApiOperation(value = "热门小区",notes ="热门小区列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "title",value = "标题",dataType = "String"),
+            @ApiImplicitParam(name = "page",value = "当前页",dataType = "String"),
+            @ApiImplicitParam(name = "limit",value = "每页条数",dataType = "String"),
+            @ApiImplicitParam(name = "name",value = "小区名称",dataType = "String")
+    })
     public ResultMap<HeatAreas> listData(HttpServletRequest request,
                                          @RequestParam(name = "page", required = false, defaultValue = "1") int page,
                                          @RequestParam(name = "limit", required = false, defaultValue = "10") int limit,
@@ -52,7 +64,7 @@ public class HeatAreasController extends BaseController {
             query.setPara("name",heatAreas.getName());
         }
         query = heatAreasService.findPage(query);
-        ResultMap<HeatAreas> resultMap = new ResultMap<>(query.getList(), query.getTotalRow());
+        ResultMap<HeatAreas> resultMap = new ResultMap<>(query.getList(), query.getTotalRow(),page,limit);
         return resultMap;
     }
 
@@ -65,6 +77,10 @@ public class HeatAreasController extends BaseController {
      * @return
      */
     @PostMapping("/view")
+    @ApiOperation(value = "热门小区",notes ="热门小区")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "小区id",value = "areasId",dataType = "String")
+    })
     public JsonResult view(HttpServletRequest request, @RequestBody String params) {
         //查询地区
         HeatAreas heatAreas = JSONObject.parseObject(params, HeatAreas.class);

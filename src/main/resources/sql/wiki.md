@@ -12,6 +12,9 @@ findPage
     @if(!isEmpty(title)) {
       and w.title like #'%'+title+'%'#
     @} 
+    @if(!isEmpty(type)) {
+          and w.type = #type#
+        @} 
     @pageIgnoreTag(){
         order by w.clicks desc
     @}

@@ -11,6 +11,7 @@ import cn.com.service.admin.WikiService;
 import cn.com.utils.StringUtils;
 import cn.com.utils.UUIDUtil;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.Api;
 import org.beetl.sql.core.engine.PageQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*",allowCredentials="true",allowedHeaders = "",methods = {})
+@Api(tags = "装修百科相关Api",value = "装修百科相关Api")
 @RequestMapping("/pgzs/wiki")
 public class WikiController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(WikiController.class);
@@ -46,8 +48,11 @@ public class WikiController extends BaseController {
         if (StringUtils.isNotEmpty(wiki.getTitle())) {
             query.setPara("title",wiki.getTitle());
         }
+        if (StringUtils.isNotEmpty(wiki.getTitle())) {
+            query.setPara("type",wiki.getType());
+        }
         query = wikiService.findPage(query);
-        ResultMap<Wiki> resultMap = new ResultMap<>(query.getList(), query.getTotalRow());
+        ResultMap<Wiki> resultMap = new ResultMap<>(query.getList(), query.getTotalRow(),page,limit);
         return resultMap;
     }
 

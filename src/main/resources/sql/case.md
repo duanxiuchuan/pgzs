@@ -9,14 +9,13 @@ findPage
     from  exquisite_case c
      left join heat_areas h on c.areas_id = h.areas_id
      left join designer d on c.designer_id = d.designer_id
-     
     where 1 = 1
-    and c.status = 1
+    and c.status = 1 and h.status = 1 and d.status = 1
     @if(!isEmpty(areasName)) {
-                and c.areas_name like #'%'+areasName+'%'#
+                and h.name like #'%'+areasName+'%'#
         @}
         @if(!isEmpty(style)) {
-         and c.style like #'%'+style+'%'#
+         and c.style like #style#
         @}
     @pageIgnoreTag(){
         order by c.area desc
