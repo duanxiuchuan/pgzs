@@ -24,6 +24,8 @@ public class DictConstantType {
     public static final String ADMIN_FUCA_TYPE = "admin_fuca_type";
     /** 装修百科类型 */
     public static final String ADMIN_WIKI_TYPE = "admin_wiki_type";
+    /** 装修面积 */
+    public static final String ADMIN_AREA_TYPE = "admin_area_type";
 
 
 

@@ -17,6 +17,12 @@ findPage
         @if(!isEmpty(style)) {
          and c.style like #style#
         @}
+        @if(!isEmpty(layout)) {
+         and c.layout like #layout#
+        @}
+        @if(!isEmpty(area)) {
+         and c.area like #area#
+        @}
     @pageIgnoreTag(){
         order by c.area desc
     @}

@@ -81,10 +81,13 @@ public class ManageCaseController extends BaseController {
         List<Dict> styleList = dictService.findByType(DictConstantType.ADMIN_STYLE_TYPE);
         //查询所有户型
         List<Dict> layoutList = dictService.findByType(DictConstantType.ADMIN_LAYOUT_TYPE);
+        //查询所有面积
+        List<Dict> areaList = dictService.findByType(DictConstantType.ADMIN_AREA_TYPE);
         request.setAttribute("heatAreasList",heatAreasList);
         request.setAttribute("designerList",designerList);
         request.setAttribute("layoutList",layoutList);
         request.setAttribute("styleList",styleList);
+        request.setAttribute("areaList",areaList);
         return "manage/case/add";
     }
 
@@ -148,10 +151,13 @@ public class ManageCaseController extends BaseController {
         List<Dict> styleList = dictService.findByType(DictConstantType.ADMIN_STYLE_TYPE);
         //查询所有户型
         List<Dict> layoutList = dictService.findByType(DictConstantType.ADMIN_LAYOUT_TYPE);
+        //查询所有面积
+        List<Dict> areaList = dictService.findByType(DictConstantType.ADMIN_AREA_TYPE);
         request.setAttribute("heatAreasList",heatAreasList);
         request.setAttribute("designerList",designerList);
         request.setAttribute("layoutList",layoutList);
         request.setAttribute("styleList",styleList);
+        request.setAttribute("areaList",areaList);
         request.setAttribute("case",aCase);
         return "manage/case/edit";
     }

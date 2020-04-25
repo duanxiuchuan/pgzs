@@ -41,6 +41,7 @@ public class HeatAreas extends BaseEntity<HeatAreas> implements Serializable {
 	private String title ;
 	private String detail;
 	private String name;
+    private String cover;
 
 	public HeatAreas() {
 	}

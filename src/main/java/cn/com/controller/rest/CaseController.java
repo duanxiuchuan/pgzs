@@ -52,10 +52,11 @@ public class CaseController extends BaseController {
     @ResponseBody
     @ApiOperation(value = "经典案例",notes ="经典案例列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "areasName",value = "小区名称",dataType = "String"),
+            @ApiImplicitParam(name = "area",value = "装修面积",dataType = "String"),
             @ApiImplicitParam(name = "page",value = "当前页",dataType = "String"),
             @ApiImplicitParam(name = "limit",value = "每页条数",dataType = "String"),
-            @ApiImplicitParam(name = "style",value = "风格",dataType = "String")
+            @ApiImplicitParam(name = "style",value = "风格",dataType = "String"),
+            @ApiImplicitParam(name = "layout",value = "户型",dataType = "String")
     })
     public ResultMap<Case> listData(HttpServletRequest request,
                                         @RequestParam(name = "page", required = false, defaultValue = "1") int page,
@@ -65,10 +66,13 @@ public class CaseController extends BaseController {
         Case cass = JSONObject.parseObject(params, Case.class);
         PageQuery<Case> query = new PageQuery<>(page, limit);
         if (StringUtils.isNotEmpty(cass.getAreasName())) {
-            query.setPara("areasName",cass.getAreasName());
+            query.setPara("area",cass.getAreasName());
         }
         if (StringUtils.isNotEmpty(cass.getStyle())) {
             query.setPara("style", cass.getStyle());
+        }
+        if (StringUtils.isNotEmpty(cass.getStyle())) {
+            query.setPara("layout", cass.getLayout());
         }
         query = caseService.findPage(query);
         ResultMap<Case> resultMap = new ResultMap<>(query.getList(), query.getTotalRow(),page,limit);

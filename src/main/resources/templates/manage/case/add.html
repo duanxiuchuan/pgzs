@@ -31,7 +31,10 @@
     <div class="layui-form-item">
         <label class="layui-form-label">面积</label>
         <div class="layui-input-inline">
-            <input th:type="text" th:id="area" th:name="area" lay-verify="required" autocomplete="off" class="layui-input">
+            <select class="form-control select2" th:id="area" th:name="area" >
+                <option value=""> --- 请选择 --- </option>
+                <option th:each="c:${areaList}"  th:value="${c.value}" th:text="${c.name}" ></option>
+            </select>
         </div>
     </div>
     <div class="layui-form-item">

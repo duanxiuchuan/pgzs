@@ -44,6 +44,7 @@ public class Style extends BaseEntity<Style> implements Serializable {
 	private String style ;
 	private String title;
 	private String remark;
+    private String cover;
 
 	public Style() {
 	}

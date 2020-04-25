@@ -37,6 +37,7 @@ public class Case extends BaseEntity<Case> implements Serializable {
 	/*
 	面积
 	*/
+    @Dict(type = DictConstantType.ADMIN_AREA_TYPE)
 	private String area ;
 	/*
 	小区id
@@ -64,6 +65,8 @@ public class Case extends BaseEntity<Case> implements Serializable {
 	标题
 	*/
 	private String title ;
+
+	private String cover;
 	
 	public Case() {
 	}
