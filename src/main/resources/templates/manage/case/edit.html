@@ -35,7 +35,7 @@
             <div class="layui-input-inline">
                 <select class="form-control select2" th:id="area" th:name="area" >
                     <option value=""> --- 请选择 --- </option>
-                    <option th:each="c:${areaList}"  th:value="${c.value}" th:text="${c.name}" ></option>
+                    <option th:selected="${case.area == c.name }" th:each="c:${areaList}"  th:value="${c.value}" th:text="${c.name}" ></option>
                 </select>
             </div>
         </div>
@@ -70,6 +70,15 @@
                 <option th:selected="${case.designerId == c.designerId}" th:each="c:${designerList}"  th:value="${c.designerId}" th:text="${c.name}" ></option>
             </select>
             <input type="hidden" id="detils" th:value="${case.detail}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">封面图</label>
+        <div class="layui-input-inline">
+            <input type="image" class="layui-nav-img" name="cover" id="test2"  th:src="${case.cover}" th:value="${case.cover}" />
+            <button type="button" class="layui-btn" id="test1">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
         </div>
     </div>
     <div class="layui-form-item">
@@ -131,6 +140,27 @@
             });
             return false;
         })
+
+        layui.use('upload', function () {
+            var upload = layui.upload;
+
+            var uploadInst = upload.render({
+                elem: "#test1",
+                url: "/admin/admin/common/richImg",
+                done: function (res)
+                {
+                    console.log(res);
+                    layui.$("#test2").attr('src', res.data.src);
+                    layui.$("#test2").attr('value',res.data.src);
+                    layer.msg("上传成功", {time: 2000, icon: 6});
+
+                },
+                error: function ()
+                {
+
+                }
+            })
+        });
     });
 </script>
 </body>

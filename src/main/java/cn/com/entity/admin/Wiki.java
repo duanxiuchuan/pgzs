@@ -44,6 +44,7 @@ public class Wiki extends BaseEntity<Wiki> implements Serializable {
 	@Dict(type = DictConstantType.ADMIN_WIKI_TYPE)
 	private String type ;
 	private String detail;
+	private String cover;
 
 	public Wiki() {
 	}

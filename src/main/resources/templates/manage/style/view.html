@@ -44,6 +44,12 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">封面图</label>
+        <div class="layui-input-inline">
+            <input type="image" class="layui-nav-img" th:name="cover" id="test2" th:src="${style.cover}" th:value="${style.cover}" />
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">详情</label>
         <div class="layui-input-block">
             <textarea id="lay_edit" lay-verify="content" name = "detail" ></textarea>

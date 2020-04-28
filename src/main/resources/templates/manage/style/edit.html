@@ -44,6 +44,15 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">封面图</label>
+        <div class="layui-input-inline">
+            <input type="image" class="layui-nav-img" name="cover" id="test2"  th:src="${style.cover}" th:value="${style.cover}" />
+            <button type="button" class="layui-btn" id="test1">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">详情</label>
         <div class="layui-input-block">
             <textarea id="lay_edit" lay-verify="content" name = "detail" ></textarea>
@@ -109,6 +118,26 @@
             });
             return false;
         })
+        layui.use('upload', function () {
+            var upload = layui.upload;
+
+            var uploadInst = upload.render({
+                elem: "#test1",
+                url: "/admin/admin/common/richImg",
+                done: function (res)
+                {
+                    console.log(res);
+                    layui.$("#test2").attr('src', res.data.src);
+                    layui.$("#test2").attr('value',res.data.src);
+                    layer.msg("上传成功", {time: 2000, icon: 6});
+
+                },
+                error: function ()
+                {
+
+                }
+            })
+        });
     });
 </script>
 </body>

@@ -19,6 +19,12 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <label class="layui-form-label">封面图</label>
+        <div class="layui-input-inline">
+            <input type="image" class="layui-nav-img" th:name="cover" id="test2" th:src="${wiki.cover}" th:value="${wiki.cover}" />
+        </div>
+    </div>
+    <div class="layui-form-item">
         <label class="layui-form-label">来源</label>
         <div class="layui-input-block">
             <input th:type="text" th:id="source" th:name="source" th:value="${wiki.source}" lay-verify="required" autocomplete="off" class="layui-input">
@@ -94,6 +100,27 @@
             });
             return false;
         })
+
+        layui.use('upload', function () {
+            var upload = layui.upload;
+
+            var uploadInst = upload.render({
+                elem: "#test1",
+                url: "/admin/admin/common/richImg",
+                done: function (res)
+                {
+                    console.log(res);
+                    layui.$("#test2").attr('src', res.data.src);
+                    layui.$("#test2").attr('value',res.data.src);
+                    layer.msg("上传成功", {time: 2000, icon: 6});
+
+                },
+                error: function ()
+                {
+
+                }
+            })
+        });
     });
 </script>
 </body>

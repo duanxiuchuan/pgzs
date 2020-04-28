@@ -27,10 +27,7 @@
         <label class="layui-form-label">面积</label>
         <div class="layui-input-block">
             <div class="layui-input-inline">
-                <select class="form-control select2" th:id="area" th:name="area" >
-                    <option value=""> --- 请选择 --- </option>
-                    <option th:each="c:${areaList}"  th:value="${c.value}" th:text="${c.name}" ></option>
-                </select>
+                <input th:type="text" th:id="area" th:name="area" th:value="${case.area}" lay-verify="required" autocomplete="off" class="layui-input">
             </div>
         </div>
     </div>
@@ -51,6 +48,12 @@
         <div class="layui-input-block">
             <input th:type="text" th:id="designer" th:name="designer" th:value="${case.designerName}" lay-verify="required" autocomplete="off" class="layui-input">
             <input type="hidden" id="detils" th:value="${case.detail}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">封面图</label>
+        <div class="layui-input-inline">
+            <input type="image" class="layui-nav-img" th:name="cover" id="test2" th:src="${case.cover}" th:value="${case.cover}" />
         </div>
     </div>
     <div class="layui-form-item">

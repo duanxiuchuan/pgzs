@@ -129,6 +129,7 @@ public class DictController extends BaseController {
     public JsonResult update(HttpServletRequest request, Dict dict) {
         try {
             dictService.update(dict);
+            redisService.remove(dict.getType());
             return JsonResult.success("修改成功", null);
         } catch (Exception e) {
             logger.error(e.getMessage());
